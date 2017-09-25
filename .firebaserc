@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "react-most-wanted-3b1b2"
+    "zerke app staging": "zerke-80063",
+    "default": "zerke-80063"
   }
 }

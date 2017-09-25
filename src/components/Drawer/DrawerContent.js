@@ -81,6 +81,30 @@ const DrawerContent = (props, context) => {
       primaryText: intl.formatMessage({id: 'dashboard'}),
       leftIcon: <FontIcon className="material-icons" >dashboard</FontIcon>
     },
+     {
+      value:'/locations',
+      visible: isAuthorised,
+      primaryText: intl.formatMessage({id: 'Locations'}),
+      leftIcon: <FontIcon className="material-icons" >map</FontIcon>
+    },
+    {
+      value:'/companies',
+      visible: isGranted('read_companies'),
+      primaryText: intl.formatMessage({id: 'companies'}),
+      leftIcon: <FontIcon className="material-icons" >business</FontIcon>
+    },
+    {
+      value:'/forums',
+      visible: isAuthorised,
+      primaryText: intl.formatMessage({id: 'Forums'}),
+      leftIcon: <FontIcon className="material-icons" >list</FontIcon>
+    },
+     {
+      value:'/billing history',
+      visible: isAuthorised,
+      primaryText: intl.formatMessage({id: 'Billing History'}),
+      leftIcon: <FontIcon className="material-icons" >credit_card</FontIcon>
+    },
     {
       visible: isAuthorised,
       primaryText: intl.formatMessage({id: 'chats'}),
@@ -107,23 +131,19 @@ const DrawerContent = (props, context) => {
         }
       ]
     },
-    {
-      value:'/companies',
-      visible: isGranted('read_companies'),
-      primaryText: intl.formatMessage({id: 'companies'}),
-      leftIcon: <FontIcon className="material-icons" >business</FontIcon>
-    },
-    {
-      value:'/tasks',
+     {
+      divider:true,
       visible: isAuthorised,
-      primaryText: intl.formatMessage({id: 'tasks'}),
-      leftIcon: <FontIcon className="material-icons" >list</FontIcon>
     },
     {
       value:'/about',
       visible: isAuthorised,
       primaryText: intl.formatMessage({id: 'about'}),
       leftIcon: <FontIcon className="material-icons" >info_outline</FontIcon>
+    },
+    {
+      divider:true,
+      visible: isAuthorised,
     },
     {
       visible: isAuthorised, //In prod: isGranted('administration'),
@@ -144,10 +164,6 @@ const DrawerContent = (props, context) => {
           leftIcon: <FontIcon className="material-icons" >account_box</FontIcon>
         },
       ]
-    },
-    {
-      divider:true,
-      visible: isAuthorised,
     },
     {
       primaryText: intl.formatMessage({id: 'settings'}),

@@ -2,12 +2,12 @@ import firebase from 'firebase';
 
 const config= {
   firebase_config: {
-    apiKey: "AIzaSyBQAmNJ2DbRyw8PqdmNWlePYtMP0hUcjpY",
-    authDomain: "react-most-wanted-3b1b2.firebaseapp.com",
-    databaseURL: "https://react-most-wanted-3b1b2.firebaseio.com",
-    projectId: "react-most-wanted-3b1b2",
-    storageBucket: "react-most-wanted-3b1b2.appspot.com",
-    messagingSenderId: "258373383650"
+    apiKey: "AIzaSyDoz--xp9Z3N8SEsChAt_7_DHXxHocUL_4",
+    authDomain: "zerke-80063.firebaseapp.com",
+    databaseURL: "https://zerke-80063.firebaseio.com",
+    projectId: "zerke-80063",
+    storageBucket: "zerke-80063.appspot.com",
+    messagingSenderId: "672827555040"
   },
   firebase_providers: [
     firebase.auth.GoogleAuthProvider,
@@ -18,7 +18,7 @@ const config= {
     firebase.auth.PhoneAuthProvider
   ],
   initial_state: {
-    theme: 'dark',
+    theme: 'light',
     locale: 'en'
   },
   drawer_width: 256
