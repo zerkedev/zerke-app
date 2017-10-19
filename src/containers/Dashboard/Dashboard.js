@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import FlatButton from 'material-ui/FlatButton';
 import { injectIntl, intlShape } from 'react-intl';
-import { GitHubIcon } from '../../components/Icons';
+import { ZerkeIcon } from '../../components/Icons';
 import { Activity } from '../../containers/Activity';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 import {Line, Bar, Doughnut} from 'react-chartjs-2';
@@ -144,11 +144,11 @@ class Dashboard extends Component {
         iconElementRight={
           <FlatButton
             style={{marginTop: 4}}
-            href="https://github.com/TarikHuber/react-most-wanted"
+            href="https://zerke.co"
             target="_blank"
             rel="noopener"
             secondary={true}
-            icon={<GitHubIcon/>}
+            icon={<ZerkeIcon/>}
           />
         }
         title={intl.formatMessage({id: 'dashboard'})}>

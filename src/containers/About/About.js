@@ -1,7 +1,7 @@
 import React from 'react';
 import FlatButton from 'material-ui/FlatButton';
 import { injectIntl, intlShape } from 'react-intl';
-import { GitHubIcon } from '../../components/Icons';
+import { ZerkeIcon } from '../../components/Icons';
 import { Activity } from '../../containers/Activity';
 import {MarkdownElement} from '../../components/MarkdownElement';
 
@@ -14,11 +14,11 @@ const About = ({intl}) => {
       iconElementRight={
         <FlatButton
           style={{marginTop: 4}}
-          href="https://github.com/TarikHuber/react-most-wanted"
+          href="https://zerke.co/about"
           target="_blank"
           rel="noopener"
           secondary={true}
-          icon={<GitHubIcon/>}
+          icon={<ZerkeIcon/>}
         />
       }
       title={intl.formatMessage({id: 'about'})}>
