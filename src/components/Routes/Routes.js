@@ -21,6 +21,7 @@ function MyLoadable(opts, preloadComponents) {
 };
 
 const AsyncDashboard = MyLoadable({loader: () => import('../../containers/Dashboard/Dashboard')});
+const AsyncHome = MyLoadable({loader: () => import('../../containers/Home/Home')});
 const AsyncAbout = MyLoadable({loader: () => import('../../containers/About/About')});
 const AsyncPublicChats = MyLoadable({loader: () => import('../../containers/PublicChats/PublicChats')});
 const AsyncMyAccount = MyLoadable({loader: () => import('../../containers/MyAccount/MyAccount')});
@@ -41,6 +42,18 @@ const AsyncChats = MyLoadable({loader: () => import('../../containers/Chats/Chat
 const AsyncCompany = MyLoadable({loader: () => import('../../containers/Companies/Company')});
 const AsyncCompanies = MyLoadable({loader: () => import('../../containers/Companies/Companies')}, [AsyncCompany]);
 
+const AsyncLocation = MyLoadable({loader: () => import('../../containers/Locations/Location')});
+const AsyncLocations = MyLoadable({loader: () => import('../../containers/Locations/Locations')}, [AsyncLocation]);
+
+const AsyncLocationPage = MyLoadable({loader: () => import('../../containers/Locations/LocationPage')});
+
+
+const AsyncBill = MyLoadable({loader: () => import('../../containers/Billing/Bill')});
+const AsyncBilling = MyLoadable({loader: () => import('../../containers/Billing/Billing')}, [AsyncBill]);
+
+const AsyncForum = MyLoadable({loader: () => import('../../containers/Forums/Forum')});
+const AsyncForums = MyLoadable({loader: () => import('../../containers/Forums/Forums')}, [AsyncForum]);
+
 const AsyncUser = MyLoadable({loader: () => import('../../containers/Users/User')});
 const AsyncUsers = MyLoadable({loader: () => import('../../containers/Users/Users')}, [AsyncUser]);
 
@@ -51,8 +64,10 @@ const Routes = (props, context) => {
 
   return (
     <Switch >
-      <RestrictedRoute type='private' path="/" exact component={AsyncDashboard} />
+      <RestrictedRoute type='private' path="/" exact component={AsyncHome} />
       <RestrictedRoute type='private' path="/dashboard" exact component={AsyncDashboard} />
+
+      <RestrictedRoute type='private' path="/home" exact component={AsyncHome} />
 
       <RestrictedRoute type='private' path="/loading" exact component={LoadingComponent} />
 
@@ -69,6 +84,21 @@ const Routes = (props, context) => {
       <RestrictedRoute type='private' path="/companies" exact component={AsyncCompanies} />
       <RestrictedRoute type='private' path="/companies/edit/:uid" exact component={AsyncCompany} />
       <RestrictedRoute type='private' path="/companies/create" exact component={AsyncCompany} />
+
+      <RestrictedRoute type='private' path="/locations" exact component={AsyncLocations} />
+      <RestrictedRoute type='private' path="/locations/edit/:uid" exact component={AsyncLocation} />
+      <RestrictedRoute type='private' path="/locations/:uid" exact component={AsyncLocationPage} />
+
+      <RestrictedRoute type='private' path="/locations/create" exact component={AsyncLocation} />
+
+      <RestrictedRoute type='private' path="/billing" exact component={AsyncBilling} />
+      <RestrictedRoute type='private' path="/billing/edit/:uid" exact component={AsyncBill} />
+      <RestrictedRoute type='private' path="/billing/create" exact component={AsyncBill} />
+
+      <RestrictedRoute type='private' path="/forums" exact component={AsyncForums} />
+      <RestrictedRoute type='private' path="/forums/edit/:uid" exact component={AsyncForum} />
+      <RestrictedRoute type='private' path="/forums/create" exact component={AsyncForum} />
+
 
       <RestrictedRoute type='private' path="/predefined_chat_messages" exact component={AsyncPredefinedChatMessages} />
 

@@ -5,7 +5,7 @@ import FontIcon from 'material-ui/FontIcon';
 import ListItem from 'material-ui/List/ListItem';
 import List from 'material-ui/List/List';
 import Paper from 'material-ui/Paper';
-import {RMWIcon} from '../Icons';
+import {ZerkeIcon} from '../Icons';
 import {injectIntl} from 'react-intl';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 import { withFirebase } from 'firekit';
@@ -65,7 +65,7 @@ const DrawerHeader = ({muiTheme, intl, auth, setAuthMenuOpen, fetchUser, dialogs
             disabled={true}
             primaryText={intl.formatMessage({id: 'app_name'})}
             leftAvatar={
-              <RMWIcon color={muiTheme.palette.accent1Color} style={styles.icon}/>
+              <ZerkeIcon color={muiTheme.palette.accent1Color} style={styles.icon}/>
             }
           />
         </List>

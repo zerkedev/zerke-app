@@ -4,6 +4,19 @@ export const grants = [
   'edit_company',
   'delete_company',
   'read_companies',
+  'create_location',
+  'edit_location',
+  'delete_location',
+  'read_locations',
+  'create_post',
+  'edit_post',
+  'read_post',
+  'delete_post',
+  'read_tasks',
+  'create_task',
+  'edit_task',
+  'delete_task',
+
 ]
 
 export default function isGranted(state, grant) {

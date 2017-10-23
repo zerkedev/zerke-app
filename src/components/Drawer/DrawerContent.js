@@ -76,9 +76,9 @@ const DrawerContent = (props, context) => {
 
   const menuItems=[
     {
-      value:'/dashboard',
+      value:'/home',
       visible: isAuthorised,
-      primaryText: intl.formatMessage({id: 'dashboard'}),
+      primaryText: intl.formatMessage({id: 'home'}),
       leftIcon: <FontIcon className="material-icons" >dashboard</FontIcon>
     },
      {
@@ -87,12 +87,7 @@ const DrawerContent = (props, context) => {
       primaryText: intl.formatMessage({id: 'Locations'}),
       leftIcon: <FontIcon className="material-icons" >map</FontIcon>
     },
-    {
-      value:'/companies',
-      visible: isGranted('read_companies'),
-      primaryText: intl.formatMessage({id: 'companies'}),
-      leftIcon: <FontIcon className="material-icons" >business</FontIcon>
-    },
+  
     {
       value:'/forums',
       visible: isAuthorised,
@@ -100,7 +95,7 @@ const DrawerContent = (props, context) => {
       leftIcon: <FontIcon className="material-icons" >list</FontIcon>
     },
      {
-      value:'/billing history',
+      value:'/billing',
       visible: isAuthorised,
       primaryText: intl.formatMessage({id: 'Billing History'}),
       leftIcon: <FontIcon className="material-icons" >credit_card</FontIcon>
@@ -156,6 +151,24 @@ const DrawerContent = (props, context) => {
           visible: isAuthorised, //In prod: isGranted('read_users'),
           primaryText: intl.formatMessage({id: 'users'}),
           leftIcon: <FontIcon className="material-icons" >group</FontIcon>
+        },
+        {
+          value:'/dashboard',
+          visible: isAuthorised,
+          primaryText: intl.formatMessage({id: 'dashboard'}),
+          leftIcon: <FontIcon className="material-icons" >dashboard</FontIcon>
+        },
+        {
+          value:'/tasks',
+          visible: isAuthorised, //In prod: isGranted('read_tasks'),
+          primaryText: intl.formatMessage({id: 'tasks'}),
+          leftIcon: <FontIcon className="material-icons" >done</FontIcon>
+        },
+        {
+          value:'/companies',
+          visible: isGranted('read_companies'),
+          primaryText: intl.formatMessage({id: 'companies'}),
+          leftIcon: <FontIcon className="material-icons" >business</FontIcon>
         },
         {
           value:'/roles',
