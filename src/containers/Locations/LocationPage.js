@@ -17,6 +17,8 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import {ListItem} from 'material-ui/List';
 import Divider from 'material-ui/Divider';
 import Avatar from 'material-ui/Avatar';
+import Dialog from 'material-ui/Dialog';
+import { setDialogIsOpen } from '../../store/dialogs/actions';
 import Toggle from 'material-ui/Toggle';
 import { grants } from '../../utils/auth';
 import { Tabs, Tab } from 'material-ui/Tabs';
@@ -37,6 +39,7 @@ class LocationPage extends Component {
   componentWillMount() {
     this.props.watchList('locations');
     this.props.watchList('user_roles');
+    this.props.watchList('locations_online');
     this.props.watchList('admins');
   }
 
@@ -47,93 +50,63 @@ class LocationPage extends Component {
 
   }
 
+  handleClose = () => {
+    const { setDialogIsOpen }=this.props;
+
+    setDialogIsOpen('cowork_here', false);
+
+  }
+  handleConfirm = () => {
+
+    const {history, match, firebaseApp}=this.props;
+    const uid=match.params.uid;
+
+    if(uid){
+      firebaseApp.database().ref().child(`${path}${uid}`).then(()=>{
+        //this is where confirmation happens. currently it just breaks it. 
+        this.handleClose();
+        history.goBack();
+      })
+    }
+  }
+
+  // renderItem(i, k)=>{
+  //   const { locationSource, muiTheme, setSimpleValue } = this.props;
+
+  //   const key = locationSource[i].key;
+  //   const name = locationSource[i].val.name;
+
+  //   return <div key={key}>
+  //     <ListItem
+  //       rightIconButton={
+  //         <IconButton
+  //           onClick={() => {
+  //             setSimpleValue('chatMessageMenuOpen', false)
+  //             this.handleAddMessage("text", message)
+  //           }}>
+  //           <FontIcon className="material-icons" color={muiTheme.palette.text1Color}>send</FontIcon>
+  //         </IconButton>
+  //       }
+  //       onClick={()=>{
+  //         setSimpleValue('chatMessageMenuOpen', false);
+  //         this.name.input.value = message;
+  //         this.name.state.hasValue = true;
+  //         this.name.state.isFocused = true;
+  //         this.name.focus();
+  //       }}
+  //       key={key}
+  //       id={key}
+  //       primaryText={message}
+  //     />
+  //     <Divider/>
+  //   </div>;
+  // }
+
+  ////renderList(users){}
   
+  ////renderList(reviews) {}
 
-  // renderRoleItem = (i, k) => {
-  //   const { roles, user_roles, match} =this.props;
 
-  //   const uid=match.params.uid;
-  //   const key=roles[i].key;
-  //   const val=roles[i].val;
-  //   let userRoles=[];
-
-  //   if(user_roles!==undefined){
-  //     user_roles.map(role=>{
-  //       if(role.key===uid){
-  //         if(role.val!==undefined){
-  //           userRoles=role.val;
-  //         }
-  //       }
-  //       return role;
-  //     })
-  //   }
-
-  //   return <div key={key}>
-  //     <ListItem
-  //       leftAvatar={
-  //         <Avatar
-  //           alt="person"
-  //           src={val.photoURL}
-  //           icon={<FontIcon className="material-icons" >account_box</FontIcon>}
-  //         />
-  //       }
-  //       rightToggle={
-  //         <Toggle
-  //           toggled={userRoles[key]===true}
-  //           onToggle={(e, isInputChecked)=>{this.hanldeRoleToggleChange(e, isInputChecked, key)}}
-  //         />
-  //       }
-  //       key={key}
-  //       id={key}
-  //       primaryText={val.name}
-  //       secondaryText={val.description}
-  //     />
-  //     <Divider inset={true}/>
-  //   </div>;
-  // }
-
-  // renderOnlineItem = (i, k) => {
-  //   const { user_grants, match, intl} =this.props;
-
-  //   const uid=match.params.uid;
-  //   const key=i;
-  //   const val=grants[i];
-  //   let userGrants=[];
-
-  //   if(user_grants!==undefined){
-  //     user_grants.map(role=>{
-  //       if(role.key===uid){
-  //         if(role.val!==undefined){
-  //           userGrants=role.val;
-  //         }
-  //       }
-  //       return role;
-  //     })
-  //   }
-
-  //   return <div key={key}>
-  //     <ListItem
-  //       leftAvatar={
-  //         <Avatar
-  //           alt="person"
-  //           src={undefined}
-  //           icon={<FontIcon className="material-icons" >checked</FontIcon>}
-  //         />
-  //       }
-  //       rightToggle={
-  //         <Toggle
-  //           toggled={userGrants[val]===true}
-  //           onToggle={(e, isInputChecked)=>{this.hanldeGrantToggleChange(e, isInputChecked, val)}}
-  //         />
-  //       }
-  //       key={key}
-  //       id={key}
-  //       primaryText={intl.formatMessage({id: `grant_${val}`})}
-  //       //secondaryText={val.description}
-  //     />
-  //     <Divider inset={true}/>
-  //   </div>;
-  // }
 
 
 
@@ -144,13 +117,24 @@ class LocationPage extends Component {
       intl,
       submit,
       muiTheme,
+      setDialogIsOpen,
+      dialogs,
       match,
       admins,
       editType,
+      locations,
       setFilterIsOpen,
       hasFilters,
       isGranted
     } = this.props;
+
+    let locationSource=[];
+
+    if(locations){
+      locationSource=locations.map(location=>{
+        return {id: location.key, name: location.val.displayName, description: location.val.description}
+      })
+    }
 
     const uid=match.params.uid;
     let isAdmin=false;
@@ -164,6 +148,18 @@ class LocationPage extends Component {
       }
     }
 
+    const actions = [
+      <FlatButton
+        label={intl.formatMessage({id: 'cancel'})}
+        primary={true}
+        onClick={this.handleClose}
+      />,
+      <FlatButton
+        label={intl.formatMessage({id: 'confirm'})}
+        secondary={true}
+        onClick={this.handleConfirm}
+      />,
+    ];
 
     const menuList = [
       {
@@ -179,7 +175,8 @@ class LocationPage extends Component {
         icon: <FontIcon className="material-icons" color={hasFilters?muiTheme.palette.accent1Color:muiTheme.palette.canvasColor}>filter_list</FontIcon>,
         tooltip:intl.formatMessage({id: 'open_filter'}),
         onClick: () => setFilterIsOpen('user_grants', true)
-      }
+      },
+
     ]
 
 
@@ -204,7 +201,10 @@ class LocationPage extends Component {
            <Card>
            
                <CardMedia
-                 overlay={<CardTitle title="{location_name}" subtitle="locaion_distance" />}
+                 overlay={<CardTitle 
+                            title='{locations[i]?locations[i].val.name:undefined}'
+                            subtitle="location_distance"
+                            />}
                >
                  <img src={NewChurch} alt="" />
                </CardMedia>
@@ -223,19 +223,28 @@ class LocationPage extends Component {
                        <Card>
                          <CardHeader
                            title="Location Details"
-                           subtitle="Details"
+                           subtitle='{locations[i]?locations[i].val.details:undefined}'
                          />
                          <CardActions>
                               <FlatButton label="Cowork Here"
                               primary={true}
-                              backgroundColor={'black'} />
+                              backgroundColor={'black'}
+                              onClick={()=>{setDialogIsOpen('cowork_here', true)}} />
                              
                          </CardActions>
+                         <CardHeader
+                           title="Location Instructions"
+                           subtitle='{locations[i]?locations[i].val.location_instructions:undefined}'
+                         />
                          <CardText>
                           This is where details such as ammenities, wifi, parking, facilities, coffee are noted. 
                           
-                          This also has information about room rentals.
+                          This also has information about nav instructions.
                          </CardText>
+                         <CardHeader
+                           title="Amenities"
+                           subtitle='{locations[i]?locations[i].val.location_amenities:undefined}'
+                         />
                          
                      
                        </Card>
@@ -251,8 +260,25 @@ class LocationPage extends Component {
               </Tab>
              
               <Tab
-                label={'Instructions'}> 
-                'this.renderInstructions'             
+                label={'Rooms'}> 
+                {
+                 <div>
+                   <Card>
+                     <CardHeader
+                       title="Rooms"
+                       subtitle='{locations[i]?locations[i].val.location_instructions:undefined}'
+                     />
+                   
+                         
+                       <CardText>
+                      
+                      This also has information about room rentals.
+                     </CardText>
+                     
+                 
+                   </Card>
+                </div>
+                }           
               </Tab>
 
                isGranted('edit_location') &&
@@ -274,6 +300,15 @@ class LocationPage extends Component {
         }
         </div>
 
+        <Dialog
+          title={intl.formatMessage({id: 'cowork_here_title'})}
+          actions={actions}
+          modal={false}
+          open={dialogs.cowork_here===true}
+          onRequestClose={this.handleClose}>
+          {intl.formatMessage({id: 'cowork_here_message'})}
+        </Dialog>
+
 
       </Activity>
     );
@@ -286,13 +321,15 @@ LocationPage.propTypes = {
   intl: intlShape.isRequired,
   submit: PropTypes.func.isRequired,
   muiTheme: PropTypes.object.isRequired,
+  setDialogIsOpen: PropTypes.func.isRequired,
+  dialogs: PropTypes.object.isRequired,
   match: PropTypes.object.isRequired,
   admins: PropTypes.array.isRequired,
 };
 
 
 const mapStateToProps = (state, ownProps) => {
-  const { auth, intl, lists, filters } = state;
+  const { auth, intl, lists, dialogs, filters } = state;
   const { match } = ownProps;
 
   const uid=match.params.uid;
@@ -303,6 +340,7 @@ const mapStateToProps = (state, ownProps) => {
     hasFilters,
     auth,
     uid,
+    dialogs,
     editType,
     intl,
     roles: lists.roles,
@@ -314,5 +352,5 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 export default connect(
-  mapStateToProps, { setSimpleValue, change, submit, ...filterActions }
+  mapStateToProps, { setDialogIsOpen, setSimpleValue, change, submit, ...filterActions }
 )(injectIntl(withRouter(withFirebase(muiThemeable()(LocationPage)))));

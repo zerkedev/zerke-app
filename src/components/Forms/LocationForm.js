@@ -118,12 +118,14 @@ class LocationForm extends Component {
 
         <div>
           <Field
-            name="full_name"
+            name="address"
             disabled={!initialized}
             component={TextField}
-            hintText={intl.formatMessage({id: 'full_name_hint'})}
-            floatingLabelText={intl.formatMessage({id: 'full_name_label'})}
-            ref="full_name"
+            multiLine={true}
+            rows={2}
+            hintText={intl.formatMessage({id: 'address_hint'})}
+            floatingLabelText={intl.formatMessage({id: 'address_label'})}
+            ref="address"
             withRef
           />
         </div>
@@ -165,16 +167,61 @@ class LocationForm extends Component {
           title={intl.formatMessage({id: 'change_photo'})}
         />
       </div>
+
       <br/>
 
       <div>
-        <TextField
-        disabled={true}/>
+        
         <Toggle
          label={intl.formatMessage({id: 'is_online_label'})}
          onToggle={(e, isInputChecked)=>{this.handleOnlineChange(e, isInputChecked)}}
         />
       </div>
+
+      <div>
+        <Field
+          name="location_instructions"
+          disabled={!initialized}
+          component={TextField}
+          multiLine={true}
+          rows={2}
+          hintText={intl.formatMessage({id: 'instructions_hint'})}
+          floatingLabelText={intl.formatMessage({id: 'instructions_label'})}
+          ref="location_instructions"
+          withRef
+        />
+      </div>
+
+      <div>
+        <Field
+          name="photoURL"
+          size={120}
+          component={Avatar}
+          icon={
+            <FontIcon
+              className="material-icons">
+              business
+            </FontIcon>
+          }
+          ref="photoURL"
+          withRef
+        />
+      </div>
+
+        <FlatButton
+          onClick={()=>{
+            setDialogIsOpen('new_location_photo', true)
+          }}
+          disabled={uid===undefined || !initialized}
+          containerElement='label'
+          primary={true}
+          icon={
+            <FontIcon
+              className="material-icons">
+              photo_camera
+            </FontIcon>
+          }
+        />
 
     </form>
   );

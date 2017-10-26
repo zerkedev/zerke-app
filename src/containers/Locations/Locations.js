@@ -87,6 +87,15 @@ class Locations extends Component {
 
   render(){
     const { intl, locations, muiTheme, history, isGranted, } =this.props;
+    
+    let locationSource=[];
+
+    if(locations){
+      locationSource=locations.map(location=>{
+        return {id: location.key, name: location.val.displayName}
+      })
+    }
+
 
     return (
       <Activity
@@ -121,29 +130,34 @@ class Locations extends Component {
             <Tab
               value={'locations'}
               icon={<FontIcon className="material-icons">location_city</FontIcon>}>
-              {
-                  <div>
-                    <Card>
-                      <CardHeader
-                        title="Curator Name"
-                        subtitle="Curator"
-                        icon={<FontIcon className="material-icons">account_box</FontIcon>}
-                      />
-                      <CardMedia
-                        overlay={<CardTitle title="St Johns" subtitle="Episcopal Church" />}
-                      >
-                        <img src={NewChurch} alt="" />
-                      </CardMedia>
-                      <CardText>
-                       {2} miles away.
-                      </CardText>
-                      <CardActions>
-
-                      </CardActions>
-                  
-                    </Card>
-                 </div>
-              }
+                {locationSource.map((val, i) => {
+                  return (
+                     <Card
+                      style={{width:'398'}}>
+                      <div key={val.id} value={val.id?val.id:i} label={val.name} 
+                           onClick={()=>{history.push(`/locations/${locations[i].key}`)}}>
+                        <CardHeader
+                          title="Curator Name"
+                          subtitle="Curator"
+                          icon={<FontIcon className="material-icons">account_box</FontIcon>}
+                        />
+                        <CardMedia
+                          overlay={
+                            <CardTitle 
+                            title={locations[i]?locations[i].val.name:undefined} 
+                            subtitle="2 miles away"
+                             />}
+                        >
+                          <img src={locations[i]?locations[i].val.photoURL:undefined} alt="" />
+                        </CardMedia>
+                        <CardText>
+                         {<br/>}
+                         {locations[i]?locations[i].val.description:undefined}
+                        </CardText>
+                      </div>
+                     </Card> 
+                   )
+                  })}
 
             </Tab>
             <Tab
