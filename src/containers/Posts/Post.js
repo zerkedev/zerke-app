@@ -13,9 +13,9 @@ import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
 import { withFirebase } from 'firekit';
 
-const path='/public_tasks/';
+const path='/public_posts/';
 
-class Task extends Component {
+class Post extends Component {
 
   componentDidMount() {
     this.props.watchList('users');
@@ -83,25 +83,25 @@ class Task extends Component {
           />:undefined
         }
         onBackClick={()=>{history.goBack()}}
-        title={intl.formatMessage({id: this.props.match.params.uid?'edit_task':'create_task'})}>
+        title={intl.formatMessage({id: this.props.match.params.uid?'edit_post':'create_post'})}>
         <div style={{margin: 15, display: 'flex'}}>
           <FireForm
-            name={'task'}
+            name={'post'}
             path={path}
-            onSubmitSuccess={(values)=>{history.push('/tasks');}}
-            onDelete={(values)=>{history.push('/tasks');}}
+            onSubmitSuccess={(values)=>{history.push('/posts');}}
+            onDelete={(values)=>{history.push('/posts');}}
             handleCreateValues={this.handleCreateValues}
             uid={this.props.match.params.uid}>
             <Form />
           </FireForm>
         </div>
         <Dialog
-          title={intl.formatMessage({id: 'delete_task_title'})}
+          title={intl.formatMessage({id: 'delete_post_title'})}
           actions={actions}
           modal={false}
           open={dialogs.delete_vehicle===true}
           onRequestClose={this.handleClose}>
-          {intl.formatMessage({id: 'delete_task_message'})}
+          {intl.formatMessage({id: 'delete_post_message'})}
         </Dialog>
       </Activity>
     );
@@ -121,4 +121,4 @@ const mapStateToProps = (state) => {
 
 export default connect(
   mapStateToProps, {setDialogIsOpen}
-)(injectIntl(withRouter(withFirebase(Task))));
+)(injectIntl(withRouter(withFirebase(Post))));

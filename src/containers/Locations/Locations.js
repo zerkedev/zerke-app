@@ -119,7 +119,7 @@ class Locations extends Component {
 
             </Tab>
             <Tab
-           value={'locations'}
+              value={'locations'}
               icon={<FontIcon className="material-icons">location_city</FontIcon>}>
               {
                   <div>

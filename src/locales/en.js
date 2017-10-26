@@ -1,7 +1,7 @@
 import {defineMessages} from 'react-intl';
 
 const messages=defineMessages({
-  app_name: 'React Most Wanted',
+  app_name: 'zerke app',
   dashboard: 'Dashboard',
   about: 'About',
   page_not_found_demo: 'Page not found demo',
@@ -115,6 +115,14 @@ const messages=defineMessages({
   grant_create_company: 'Create company',
   grant_edit_company: 'Edit company',
   grant_delete_company: 'Delete company',
+  grant_read_locations: 'Read Locations',
+  grant_create_location: 'Create Location',
+  grant_edit_location: 'Edit Location',
+  grant_delete_location: 'Delete Location',
+  grant_read_posts: 'Read Posts',
+  grant_create_post: 'Create Post',
+  grant_edit_post: 'Edit Post',
+  grant_delete_post: 'Delete Post',
   is_admin_label: 'Administrator',
   predefined_messages: 'Predefined messages',
   delete_predefined_chat_message_title: 'Delete predefined message?',
@@ -135,7 +143,13 @@ const messages=defineMessages({
   select_operator: 'Select operator',
   not_match_found: 'No match found',
   edit_user: 'Edit user',
-
+  home: 'Home',
+  locations: 'Locations',
+  posts: 'Posts',
+  forum: 'Forum',
+  billing: 'Billing',
+  billing_history: 'Billing History',
+  upvote: 'Upvote',
 });
 
 export default messages;

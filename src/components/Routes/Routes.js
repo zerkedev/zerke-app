@@ -51,8 +51,8 @@ const AsyncLocationPage = MyLoadable({loader: () => import('../../containers/Loc
 const AsyncBill = MyLoadable({loader: () => import('../../containers/Billing/Bill')});
 const AsyncBilling = MyLoadable({loader: () => import('../../containers/Billing/Billing')}, [AsyncBill]);
 
-const AsyncForum = MyLoadable({loader: () => import('../../containers/Forums/Forum')});
-const AsyncForums = MyLoadable({loader: () => import('../../containers/Forums/Forums')}, [AsyncForum]);
+const AsyncPost = MyLoadable({loader: () => import('../../containers/Posts/Post')});
+const AsyncPosts = MyLoadable({loader: () => import('../../containers/Posts/Posts')}, [AsyncPost]);
 
 const AsyncUser = MyLoadable({loader: () => import('../../containers/Users/User')});
 const AsyncUsers = MyLoadable({loader: () => import('../../containers/Users/Users')}, [AsyncUser]);
@@ -95,9 +95,9 @@ const Routes = (props, context) => {
       <RestrictedRoute type='private' path="/billing/edit/:uid" exact component={AsyncBill} />
       <RestrictedRoute type='private' path="/billing/create" exact component={AsyncBill} />
 
-      <RestrictedRoute type='private' path="/forums" exact component={AsyncForums} />
-      <RestrictedRoute type='private' path="/forums/edit/:uid" exact component={AsyncForum} />
-      <RestrictedRoute type='private' path="/forums/create" exact component={AsyncForum} />
+      <RestrictedRoute type='private' path="/posts" exact component={AsyncPosts} />
+      <RestrictedRoute type='private' path="/posts/edit/:uid" exact component={AsyncPost} />
+      <RestrictedRoute type='private' path="/posts/create" exact component={AsyncPost} />
 
 
       <RestrictedRoute type='private' path="/predefined_chat_messages" exact component={AsyncPredefinedChatMessages} />

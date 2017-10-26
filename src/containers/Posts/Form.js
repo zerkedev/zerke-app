@@ -9,7 +9,7 @@ import Avatar from 'material-ui/Avatar';
 import FontIcon from 'material-ui/FontIcon';
 
 
-class TaskForm extends Component {
+class PostForm extends Component {
   componentDidMount() {
     this.refs.title // the Field
     .getRenderedComponent() // on Field, returns ReduxFormMaterialUITextField
@@ -55,34 +55,7 @@ class TaskForm extends Component {
             withRef
           />
         </div>
-        <div>
-          <Field
-            name='helper'
-            component={SuperSelectField}
-            showAutocompleteThreshold={5}
-            elementHeight={60}
-            hintText='Helper'>
-            {userSource.map((val, i) => {
-              return (
-                <div key={val.id} value={val.id?val.id:i} label={val.name}>
-                  <div style={{display: 'flex', alignItems: 'center' }}>
-                    <Avatar
-                      src={users[i]?users[i].val.photoURL:undefined}
-                      alt="person"
-                      icon={
-                        <FontIcon className="material-icons" >
-                          person
-                        </FontIcon>}
-                      />
-                      <div style={{marginLeft: 15}}>
-                        {val.name}
-                      </div>
-                    </div>
-                  </div>
-                )
-              })}
-            </Field>
-          </div>
+       
           <br/>
 
           <div>
@@ -107,8 +80,8 @@ class TaskForm extends Component {
     };
   };
 
-  TaskForm=reduxForm({form: 'task'})(TaskForm);
+  PostForm=reduxForm({form: 'post'})(PostForm);
 
   export default connect(
     mapStateToProps
-  )(injectIntl(TaskForm));
+  )(injectIntl(PostForm));

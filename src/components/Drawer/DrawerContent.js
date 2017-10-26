@@ -89,7 +89,7 @@ const DrawerContent = (props, context) => {
     },
   
     {
-      value:'/forums',
+      value:'/posts',
       visible: isAuthorised,
       primaryText: intl.formatMessage({id: 'Forums'}),
       leftIcon: <FontIcon className="material-icons" >list</FontIcon>
