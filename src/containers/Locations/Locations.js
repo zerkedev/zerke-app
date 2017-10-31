@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 import { injectIntl } from 'react-intl';
 import { Activity } from '../../containers/Activity';
+import { ZerkeMap } from '../../containers/Map/ZerkeMap';
 import {List, ListItem } from 'material-ui/List';
 import Divider from 'material-ui/Divider';
 import FontIcon from 'material-ui/FontIcon';
@@ -113,16 +114,7 @@ class Locations extends Component {
               icon={<FontIcon className="material-icons">map</FontIcon>}>
               {
                 <div>
-                  <Card>
-                  
-                      <CardMedia
-                        overlay={<CardTitle title="Austin" subtitle="zerke space in Austin" />}
-                      >
-                        <img src={LocationsMap} alt="" />
-                      </CardMedia>
-                     
-                 
-                    </Card>      
+                  <ZerkeMap {...this.props}/>
                 </div>         
               }
 
