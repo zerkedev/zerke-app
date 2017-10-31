@@ -1,20 +1,24 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 import { injectIntl, intlShape } from 'react-intl';
 import muiThemeable from 'material-ui/styles/muiThemeable';
-import { Activity } from '../../containers/Activity'
+import { Activity } from '../../containers/Activity';
+import { Reviews } from '../../containers/Reviews';
 import { ResponsiveMenu } from 'material-ui-responsive-menu';
-import { FireForm } from 'firekit'
+import { FireForm } from 'firekit';
 import { setSimpleValue } from '../../store/simpleValues/actions';
 import { withRouter } from 'react-router-dom';
 import FontIcon from 'material-ui/FontIcon';
 import { withFirebase } from 'firekit';
 import { change, submit } from 'redux-form';
+import IconButton from 'material-ui/IconButton';
+import ReactList from 'react-list';
+import {List, ListItem} from 'material-ui/List';
 import {Paper} from 'material-ui/Paper';
 import { Card, CardHeader, CardMedia, CardTitle, CardActions, CardText } from 'material-ui/Card';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
-import {ListItem} from 'material-ui/List';
 import Divider from 'material-ui/Divider';
 import Avatar from 'material-ui/Avatar';
 import Dialog from 'material-ui/Dialog';
@@ -26,14 +30,18 @@ import Scrollbar from '../../components/Scrollbar/Scrollbar';
 import { filterSelectors, filterActions } from 'material-ui-filter'
 import isGranted  from '../../utils/auth';
 import FlatButton from 'material-ui/FlatButton'
+import TextField from 'material-ui/TextField';
+import LocationForm from '../../components/Forms/LocationForm';
 import NewChurch from '../../utils/resources/POL_Warsawa_Wawrzyszew_new_church.JPG'
 
 
 const path='/locations/${uid}';
+const pathUsers='/users';
 const form_name='location';
 
 
 class LocationPage extends Component {
+
 
 
   componentWillMount() {
@@ -41,6 +49,20 @@ class LocationPage extends Component {
     this.props.watchList('user_roles');
     this.props.watchList('locations_online');
     this.props.watchList('admins');
+    this.props.watchList('location_reviews');
+
+  };
+
+  
+
+  componentDidMount() {
+    const { watchList, firebaseApp}=this.props;
+
+    this.props.watchList(pathUsers);
+
+    let ref=firebaseApp.database().ref(`locations/`);
+
+    watchList(ref);
   }
 
   handleTabActive = (value) => {
@@ -70,44 +92,95 @@ class LocationPage extends Component {
     }
   }
 
-  // renderItem(i, k)=>{
-  //   const { locationSource, muiTheme, setSimpleValue } = this.props;
+  renderItem = (index, key) => {
+      const { list, intl, muiTheme } = this.props;
+      const user = list[index].val;
 
-  //   const key = locationSource[i].key;
-  //   const name = locationSource[i].val.name;
+      return <div key={key}>
+        <ListItem
+          key={key}
+          id={key}
+          onClick={()=>{this.handleRowClick(list[index])}}
+          leftAvatar={<Avatar style={{marginTop: 10}} src={user.photoURL} alt="person" icon={<FontIcon className="material-icons" >person</FontIcon>}/>}
+          rightIcon={<FontIcon style={{marginTop: 22}} className="material-icons" color={user.connections?muiTheme.palette.primary1Color:muiTheme.palette.disabledColor}>offline_pin</FontIcon>}>
 
-  //   return <div key={key}>
-  //     <ListItem
-  //       rightIconButton={
-  //         <IconButton
-  //           onClick={() => {
-  //             setSimpleValue('chatMessageMenuOpen', false)
-  //             this.handleAddMessage("text", message)
-  //           }}>
-  //           <FontIcon className="material-icons" color={muiTheme.palette.text1Color}>send</FontIcon>
-  //         </IconButton>
-  //       }
-  //       onClick={()=>{
-  //         setSimpleValue('chatMessageMenuOpen', false);
-  //         this.name.input.value = message;
-  //         this.name.state.hasValue = true;
-  //         this.name.state.isFocused = true;
-  //         this.name.focus();
-  //       }}
-  //       key={key}
-  //       id={key}
-  //       primaryText={message}
-  //     />
-  //     <Divider/>
-  //   </div>;
-  // }
+          <div style={{display: 'flex', flexWrap: 'wrap', alignItems: 'strech'}}>
+            <div style={{display: 'flex', flexDirection:'column', width: 120}}>
+              <div>
+                {user.displayName}
+              </div>
+              <div
+                style={{
+                  fontSize: 14,
+                  lineHeight: '16px',
+                  height: 16,
+                  margin: 0,
+                  marginTop: 4,
+                  color: muiTheme.listItem.secondaryTextColor,
+                }}>
+                {(!user.connections && !user.lastOnline)?intl.formatMessage({id: 'offline'}):intl.formatMessage({id: 'online'})}
+                {' '}
+                {(!user.connections && user.lastOnline)?intl.formatRelative(new Date(user.lastOnline)):undefined}
+              </div>
+            </div>
+
+            <div style={{marginLeft: 20, display: 'flex', flexWrap: 'wrap', alignItems: 'center'}}>
+              {user.providerData && user.providerData.map(
+                (p)=>{
+                  return (
+                    <div key={key} style={{paddingLeft: 10}}>
+                      {this.getProviderIcon(p)}
+                    </div>
+                  )
+                })
+              }
+            </div>
+          </div>
+
+        </ListItem>
+        <Divider inset={true}/>
+      </div>
+    }
 
   ////renderList(users){}
   
-  ////renderList(reviews) {}
+  renderList(reviews) {
+    const { auth, intl, history, browser, setDialogIsOpen} =this.props;
+
+    if(reviews===undefined){
+      return <div></div>
+    }
+
+    return _.map(reviews, (row, i) => {
+
+      const review=row.val;
+      const key=row.key;
+
+      return <div key={key}>
+
+        <ListItem
+          key={key}
+          //onClick={review.userId===auth.uid?()=>{history.push(`/review/edit/${key}`)}:undefined}
+          primaryText={review.title}
+          secondaryText={`${review.userName} ${review.created?intl.formatRelative(new Date(review.created)):undefined}`}
+          leftAvatar={this.userAvatar(key, review)}
+          rightIconButton={
+            review.userId===auth.uid?
+            <IconButton
+              style={{display:browser.lessThan.medium?'none':undefined}}>
+              <FontIcon className="material-icons" color={'red'}>{'delete'}</FontIcon>
+            </IconButton>:undefined
+          }
+          id={key}
+        />
 
 
+        <Divider inset={true}/>
+      </div>
+    });
+  }
 
+  
 
 
   render() {
@@ -121,20 +194,22 @@ class LocationPage extends Component {
       dialogs,
       match,
       admins,
+      ref,
       editType,
+      reviews,
+      locationDataRef,
+      list,
       locations,
       setFilterIsOpen,
       hasFilters,
+      firebaseApp,
+      locationId,
       isGranted
     } = this.props;
 
-    let locationSource=[];
 
-    if(locations){
-      locationSource=locations.map(location=>{
-        return {id: location.key, name: location.val.displayName, description: location.val.description}
-      })
-    }
+
+ 
 
     const uid=match.params.uid;
     let isAdmin=false;
@@ -147,6 +222,9 @@ class LocationPage extends Component {
         }
       }
     }
+
+  
+
 
     const actions = [
       <FlatButton
@@ -181,7 +259,6 @@ class LocationPage extends Component {
 
 
 
-
     return (
       <Activity
         iconStyleRight={{width:'50%'}}
@@ -199,10 +276,14 @@ class LocationPage extends Component {
 
         <Scrollbar>
            <Card>
+                
            
                <CardMedia
                  overlay={<CardTitle 
-                            title='{locations[i]?locations[i].val.name:undefined}'
+                            title='{locationInfoRef.val}'
+                            path={path}
+                            ref="name"
+                            withRef
                             subtitle="location_distance"
                             />}
                >
@@ -219,12 +300,12 @@ class LocationPage extends Component {
               <Tab
                 label={'Details'}>
                     {
-                     <div>
+                       <div>
+                        <div style={{margin: 15, display: 'flex'}}>
+
+                          
+                        </div>
                        <Card>
-                         <CardHeader
-                           title="Location Details"
-                           subtitle='{locations[i]?locations[i].val.details:undefined}'
-                         />
                          <CardActions>
                               <FlatButton label="Cowork Here"
                               primary={true}
@@ -232,6 +313,10 @@ class LocationPage extends Component {
                               onClick={()=>{setDialogIsOpen('cowork_here', true)}} />
                              
                          </CardActions>
+                         <CardHeader
+                           title="Location Details"
+                           subtitle='{locations[i]?locations[i].val.details:undefined}'
+                         />
                          <CardHeader
                            title="Location Instructions"
                            subtitle='{locations[i]?locations[i].val.location_instructions:undefined}'
@@ -256,7 +341,9 @@ class LocationPage extends Component {
            
               <Tab
                 label={'Reviews'}>
-                'this.renderListReviews'
+                  <div>
+                   < Reviews {...this.props}/>
+                  </div>
               </Tab>
              
               <Tab
@@ -284,7 +371,15 @@ class LocationPage extends Component {
                isGranted('edit_location') &&
               <Tab
                 label={'Coworkers'}>
-                'this.renderListCoworkers'
+                <Scrollbar>
+                  <List id='test' ref={(field) => { this.list = field; }}>
+                    <ReactList
+                      itemRenderer={this.renderItem}
+                      length={list?list.length:0}
+                      type='simple'
+                    />
+                  </List>
+                </Scrollbar>
               
               </Tab>
             </Tabs>
@@ -325,6 +420,8 @@ LocationPage.propTypes = {
   dialogs: PropTypes.object.isRequired,
   match: PropTypes.object.isRequired,
   admins: PropTypes.array.isRequired,
+  users: PropTypes.array,
+  reviews: PropTypes.array.isRequired,
 };
 
 
@@ -344,6 +441,7 @@ const mapStateToProps = (state, ownProps) => {
     editType,
     intl,
     roles: lists.roles,
+    users: lists.users,
     user_roles: lists.user_roles,
     user_grants: lists.user_grants,
     admins: lists.admins,

@@ -45,7 +45,10 @@ const AsyncCompanies = MyLoadable({loader: () => import('../../containers/Compan
 const AsyncLocation = MyLoadable({loader: () => import('../../containers/Locations/Location')});
 const AsyncLocations = MyLoadable({loader: () => import('../../containers/Locations/Locations')}, [AsyncLocation]);
 
-const AsyncLocationPage = MyLoadable({loader: () => import('../../containers/Locations/LocationPage')});
+const AsyncReview = MyLoadable({loader: () => import('../../containers/Reviews/Review')});
+const AsyncReviews = MyLoadable({loader: () => import('../../containers/Reviews/Reviews')}, [AsyncReview]);
+
+const AsyncLocationPage = MyLoadable({loader: () => import('../../containers/Locations/LocationPage')}, [AsyncLocation]);
 
 
 const AsyncBill = MyLoadable({loader: () => import('../../containers/Billing/Bill')});
@@ -99,6 +102,11 @@ const Routes = (props, context) => {
       <RestrictedRoute type='private' path="/posts" exact component={AsyncPosts} />
       <RestrictedRoute type='private' path="/posts/edit/:uid" exact component={AsyncPost} />
       <RestrictedRoute type='private' path="/posts/create" exact component={AsyncPost} />
+
+
+      <RestrictedRoute type='private' path="/reviews" exact component={AsyncReviews} />
+      <RestrictedRoute type='private' path="/reviews/edit/:uid" exact component={AsyncReview} />
+      <RestrictedRoute type='private' path="/reviews/create" exact component={AsyncReview} />
 
 
       <RestrictedRoute type='private' path="/predefined_chat_messages" exact component={AsyncPredefinedChatMessages} />
