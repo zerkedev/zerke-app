@@ -156,6 +156,32 @@ class LocationForm extends Component {
             withRef
           />
         </div>
+        <div>
+          <Field
+            name="location_instructions"
+            disabled={!initialized}
+            component={TextField}
+            multiLine={true}
+            rows={2}
+            hintText={intl.formatMessage({id: 'instructions_hint'})}
+            floatingLabelText={intl.formatMessage({id: 'instructions_label'})}
+            ref="location_instructions"
+            withRef
+          />
+        </div>
+        <div>
+          <Field
+            name="location_amenities"
+            disabled={!initialized}
+            component={TextField}
+            multiLine={true}
+            rows={2}
+            hintText={intl.formatMessage({id: 'amenities_hint'})}
+            floatingLabelText={intl.formatMessage({id: 'amenities_label'})}
+            ref="amenities_instructions"
+            withRef
+          />
+        </div>
 
         <ImageCropDialog
           path={`locations/${uid}`}
@@ -167,7 +193,6 @@ class LocationForm extends Component {
           title={intl.formatMessage({id: 'change_photo'})}
         />
       </div>
-
       <br/>
 
       <div>
@@ -178,50 +203,7 @@ class LocationForm extends Component {
         />
       </div>
 
-      <div>
-        <Field
-          name="location_instructions"
-          disabled={!initialized}
-          component={TextField}
-          multiLine={true}
-          rows={2}
-          hintText={intl.formatMessage({id: 'instructions_hint'})}
-          floatingLabelText={intl.formatMessage({id: 'instructions_label'})}
-          ref="location_instructions"
-          withRef
-        />
-      </div>
-
-      <div>
-        <Field
-          name="photoURL"
-          size={120}
-          component={Avatar}
-          icon={
-            <FontIcon
-              className="material-icons">
-              business
-            </FontIcon>
-          }
-          ref="photoURL"
-          withRef
-        />
-      </div>
-
-        <FlatButton
-          onClick={()=>{
-            setDialogIsOpen('new_location_photo', true)
-          }}
-          disabled={uid===undefined || !initialized}
-          containerElement='label'
-          primary={true}
-          icon={
-            <FontIcon
-              className="material-icons">
-              photo_camera
-            </FontIcon>
-          }
-        />
+      
 
     </form>
   );

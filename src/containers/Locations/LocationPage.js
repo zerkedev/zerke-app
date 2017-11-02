@@ -32,12 +32,13 @@ import isGranted  from '../../utils/auth';
 import FlatButton from 'material-ui/FlatButton'
 import TextField from 'material-ui/TextField';
 import LocationForm from '../../components/Forms/LocationForm';
-import NewChurch from '../../utils/resources/POL_Warsawa_Wawrzyszew_new_church.JPG'
+import NewChurch from '../../utils/resources/yuriy-kovalev-97508.jpg'
 
 
 const path='/locations/${uid}';
 const pathUsers='/users';
 const form_name='location';
+const locationPath=`/locations/`;
 
 
 class LocationPage extends Component {
@@ -68,7 +69,7 @@ class LocationPage extends Component {
   handleTabActive = (value) => {
     const { history, uid } = this.props;
 
-    history.push(`${path}`);
+    history.push(`${uid}`);
 
   }
 
@@ -222,8 +223,8 @@ class LocationPage extends Component {
         }
       }
     }
+    let isOnline=false;
 
-  
 
 
     const actions = [
@@ -280,7 +281,7 @@ class LocationPage extends Component {
            
                <CardMedia
                  overlay={<CardTitle 
-                            title='{locationInfoRef.val}'
+                            title='zerke space'
                             path={path}
                             ref="name"
                             withRef
@@ -292,6 +293,9 @@ class LocationPage extends Component {
               
            
              </Card>     
+            <div>
+              <br/>
+            </div>
 
             <Tabs
               onChange={this.handleTabActive}>
@@ -300,39 +304,32 @@ class LocationPage extends Component {
               <Tab
                 label={'Details'}>
                     {
-                       <div>
+                       <div style={{marginLeft: 20, display: 'flex', flexWrap: 'wrap', alignItems: 'center'}}>
+                        <CardActions>
+                             <FlatButton label="Cowork Here"
+                             primary={true}
+                             backgroundColor={'black'}
+                             onClick={()=>{setDialogIsOpen('cowork_here', true)}} />
+                            
+                        </CardActions>
                         <div style={{margin: 15, display: 'flex'}}>
 
-                          
+                          <FireForm
+                            name={'location'}
+                            path={`${locationPath}`}
+                            isDisabled={true}
+                            onSubmitSuccess={(values)=>{history.push('/locations');}}
+                            onDelete={(values)=>{history.push('/locations');}}
+                            uid={match.params.uid}>
+                            <LocationForm
+                              handleOnlineChange={this.handleOnlineChange}
+                              isOnline={isOnline}
+                              isDisabled={true}
+                              {...this.props} 
+                             />
+                          </FireForm>
                         </div>
-                       <Card>
-                         <CardActions>
-                              <FlatButton label="Cowork Here"
-                              primary={true}
-                              backgroundColor={'black'}
-                              onClick={()=>{setDialogIsOpen('cowork_here', true)}} />
-                             
-                         </CardActions>
-                         <CardHeader
-                           title="Location Details"
-                           subtitle='{locations[i]?locations[i].val.details:undefined}'
-                         />
-                         <CardHeader
-                           title="Location Instructions"
-                           subtitle='{locations[i]?locations[i].val.location_instructions:undefined}'
-                         />
-                         <CardText>
-                          This is where details such as ammenities, wifi, parking, facilities, coffee are noted. 
-                          
-                          This also has information about nav instructions.
-                         </CardText>
-                         <CardHeader
-                           title="Amenities"
-                           subtitle='{locations[i]?locations[i].val.location_amenities:undefined}'
-                         />
-                         
-                     
-                       </Card>
+                    
                     </div>
                     }
 
