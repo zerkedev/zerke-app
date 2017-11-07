@@ -1,8 +1,14 @@
 import React from "react"
 import { compose, withProps } from "recompose"
 import { withScriptjs, withGoogleMap, GoogleMap, Marker } from "react-google-maps"
+import muiThemeable from 'material-ui/styles/muiThemeable';
+import { injectIntl } from 'react-intl';
+import {withRouter} from 'react-router-dom';
+import { withFirebase } from 'firekit';
+import { connect } from 'react-redux';
 
-export const ZerkeMap = compose(
+
+export  const ZerkeMap = compose(
   withProps({
     googleMapURL: "https://maps.googleapis.com/maps/api/js?key=AIzaSyAmpuktmkkpHuuXC57ZB9iZ01lgPB8Nd8c&v=3.exp&libraries=geometry,drawing,places",
     loadingElement: <div style={{ height: `100%` }} />,
@@ -20,32 +26,6 @@ export const ZerkeMap = compose(
   </GoogleMap>
 )
 
-class MyFancyComponent extends React.PureComponent {
-  state = {
-    isMarkerShown: false,
-  }
+export default connect(
+  )(injectIntl(muiThemeable()(withRouter(withFirebase(ZerkeMap)))));
 
-  componentDidMount() {
-    this.delayedShowMarker()
-  }
-
-  delayedShowMarker = () => {
-    setTimeout(() => {
-      this.setState({ isMarkerShown: true })
-    }, 3000)
-  }
-
-  handleMarkerClick = () => {
-    this.setState({ isMarkerShown: false })
-    this.delayedShowMarker()
-  }
-
-  render() {
-    return (
-      <ZerkeMap
-        isMarkerShown={this.state.isMarkerShown}
-        onMarkerClick={this.handleMarkerClick}
-      />
-    )
-  }
-}

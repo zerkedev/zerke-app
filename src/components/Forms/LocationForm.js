@@ -195,10 +195,11 @@ class LocationForm extends Component {
       </div>
       <br/>
 
-      <div>
+      <div style={{marginLeft: 20, display: 'flex', flexWrap: 'wrap', alignItems: 'center'}}>
         
         <Toggle
          label={intl.formatMessage({id: 'is_online_label'})}
+         //toggled={is[val]===true}
          onToggle={(e, isInputChecked)=>{this.handleOnlineChange(e, isInputChecked)}}
         />
       </div>

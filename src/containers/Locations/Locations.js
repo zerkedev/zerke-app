@@ -18,6 +18,7 @@ import { Tabs, Tab } from 'material-ui/Tabs';
 import { Card, CardHeader, CardMedia, CardTitle, CardActions, CardText } from 'material-ui/Card';
 import {FlatButton} from 'material-ui/FlatButton';
 import Scrollbar from '../../components/Scrollbar/Scrollbar';
+import MapMarkers from '../../components/Map/MapMarkers';
 import LocationsMap from '../../utils/resources/locationsmap.png'
 import NewChurch from '../../utils/resources/POL_Warsawa_Wawrzyszew_new_church.JPG'
 
@@ -114,7 +115,7 @@ class Locations extends Component {
               icon={<FontIcon className="material-icons">map</FontIcon>}>
               {
                 <div>
-                  <ZerkeMap {...this.props}/>
+                  <MapMarkers {...this.props}/>
                 </div>         
               }
 

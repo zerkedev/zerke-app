@@ -8,6 +8,7 @@ import { Activity } from '../../containers/Activity';
 import { Reviews } from '../../containers/Reviews';
 import { ResponsiveMenu } from 'material-ui-responsive-menu';
 import { FireForm } from 'firekit';
+import firebase from 'firebase';
 import { setSimpleValue } from '../../store/simpleValues/actions';
 import { withRouter } from 'react-router-dom';
 import FontIcon from 'material-ui/FontIcon';
@@ -35,7 +36,8 @@ import LocationForm from '../../components/Forms/LocationForm';
 import NewChurch from '../../utils/resources/yuriy-kovalev-97508.jpg'
 
 
-const path='/locations/${uid}';
+
+const path=`/locations/`;
 const pathUsers='/users';
 const form_name='location';
 const locationPath=`/locations/`;
@@ -81,15 +83,26 @@ class LocationPage extends Component {
   }
   handleConfirm = () => {
 
-    const {history, match, firebaseApp}=this.props;
+    const {history, auth, match, firebaseApp}=this.props;
     const uid=match.params.uid;
+    const userId=auth.uid;
+
 
     if(uid){
-      firebaseApp.database().ref().child(`${path}${uid}`).then(()=>{
-        //this is where confirmation happens. currently it just breaks it. 
+      firebaseApp.database().ref(`/locations/${uid}/coworkersHere/${userId}`).set(true)
+      .then(()=>{
+        this.handleUpdateValues();
         this.handleClose();
         history.goBack();
       })
+    }
+  }
+
+  handleUpdateValues = (values) => {
+
+    return {
+      updated: firebase.database.ServerValue.TIMESTAMP ,
+      ...values
     }
   }
 
@@ -260,6 +273,7 @@ class LocationPage extends Component {
 
 
 
+
     return (
       <Activity
         iconStyleRight={{width:'50%'}}
@@ -273,7 +287,7 @@ class LocationPage extends Component {
         }
 
         onBackClick={()=>{history.goBack()}}
-        title={intl.formatMessage({id: 'location_name'})}>
+        title={intl.formatMessage({id: 'locations'})}>
 
         <Scrollbar>
            <Card>
@@ -305,13 +319,16 @@ class LocationPage extends Component {
                 label={'Details'}>
                     {
                        <div style={{marginLeft: 20, display: 'flex', flexWrap: 'wrap', alignItems: 'center'}}>
-                        <CardActions>
-                             <FlatButton label="Cowork Here"
-                             primary={true}
-                             backgroundColor={'black'}
-                             onClick={()=>{setDialogIsOpen('cowork_here', true)}} />
-                            
-                        </CardActions>
+                        <div style={{ display: 'center',}}> 
+                          <CardActions>
+                               <FlatButton label="Cowork Here"
+                               primary={true}
+                               style={{display: 'center'}}
+                               backgroundColor={'black'}
+                               onClick={()=>{setDialogIsOpen('cowork_here', true)}} />
+                              
+                          </CardActions>
+                        </div>
                         <div style={{margin: 15, display: 'flex'}}>
 
                           <FireForm
@@ -418,6 +435,7 @@ LocationPage.propTypes = {
   match: PropTypes.object.isRequired,
   admins: PropTypes.array.isRequired,
   users: PropTypes.array,
+  user: PropTypes.array.isRequired,
   reviews: PropTypes.array.isRequired,
 };
 
