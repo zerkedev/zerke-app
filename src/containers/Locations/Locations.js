@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 import { injectIntl } from 'react-intl';
 import { Activity } from '../../containers/Activity';
-import { ZerkeMap } from '../../containers/Map/ZerkeMap';
+import { ZerkeMap } from '../../containers/Map';
 import {List, ListItem } from 'material-ui/List';
 import Divider from 'material-ui/Divider';
 import FontIcon from 'material-ui/FontIcon';
@@ -19,6 +19,7 @@ import { Card, CardHeader, CardMedia, CardTitle, CardActions, CardText } from 'm
 import {FlatButton} from 'material-ui/FlatButton';
 import Scrollbar from '../../components/Scrollbar/Scrollbar';
 import MapMarkers from '../../components/Map/MapMarkers';
+import {withScriptjs, withGoogleMap, GoogleMap, Marker, InfoWindow } from 'react-google-maps';
 import LocationsMap from '../../utils/resources/locationsmap.png'
 import NewChurch from '../../utils/resources/POL_Warsawa_Wawrzyszew_new_church.JPG'
 
@@ -88,7 +89,7 @@ class Locations extends Component {
 
 
   render(){
-    const { intl, locations, muiTheme, history, isGranted, } =this.props;
+    const { intl, locations, muiTheme, history, isGranted,   } =this.props;
     
     let locationSource=[];
 
@@ -97,6 +98,16 @@ class Locations extends Component {
         return {id: location.key, name: location.val.displayName}
       })
     }
+    const markers =[
+       {
+        position: {
+          lat: 30.2672,
+          lng: -97.7431,
+        }
+      }
+    ]
+    
+
 
 
     return (
@@ -115,7 +126,15 @@ class Locations extends Component {
               icon={<FontIcon className="material-icons">map</FontIcon>}>
               {
                 <div>
-                  <MapMarkers {...this.props}/>
+                  <ZerkeMap 
+                    containerElement={ <div style={{ height: `400px` }} />}
+                    mapElement={ <div style={{ height: `100%` }} />}
+                    googleMapURL={ `https://maps.googleapis.com/maps/api/js?key=AIzaSyAmpuktmkkpHuuXC57ZB9iZ01lgPB8Nd8c&v=3.exp&libraries=geometry,drawing,places`}
+                    loadingElement={ <div style={{ height: `100%` }} />}
+                    markers={markers}
+                  >
+                  
+                  </ZerkeMap>
                 </div>         
               }
 

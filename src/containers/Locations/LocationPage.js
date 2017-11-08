@@ -437,6 +437,7 @@ LocationPage.propTypes = {
   users: PropTypes.array,
   user: PropTypes.array.isRequired,
   reviews: PropTypes.array.isRequired,
+  
 };
 
 
