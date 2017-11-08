@@ -14,6 +14,7 @@ import {withRouter} from 'react-router-dom';
 import Avatar from 'material-ui/Avatar';
 import { withFirebase } from 'firekit';
 import isGranted  from '../../utils/auth';
+import isOnline  from '../../utils/online';
 import { Tabs, Tab } from 'material-ui/Tabs';
 import { Card, CardHeader, CardMedia, CardTitle, CardActions, CardText } from 'material-ui/Card';
 import {FlatButton} from 'material-ui/FlatButton';
@@ -33,8 +34,9 @@ class Locations extends Component {
     const { watchList, firebaseApp}=this.props;
 
     let ref=firebaseApp.database().ref('locations').limitToFirst(20);
-
+    let coordsRef=firebaseApp.database().ref('location_coords')
     watchList(ref);
+    watchList(coordsRef);
   }
 
   handleTabActive = (value) => {
@@ -43,6 +45,8 @@ class Locations extends Component {
     history.push(`${path}/`);
 
   }
+
+  
 
   renderList(locations) {
     const {history} =this.props;
@@ -88,26 +92,36 @@ class Locations extends Component {
   }
 
 
-  render(){
-    const { intl, locations, muiTheme, history, isGranted,   } =this.props;
-    
+
+  render(i, keys){
+    const { intl, locations, locationId,  location_coords, match, firebaseApp, muiTheme, history, isGranted,   } =this.props;
+
     let locationSource=[];
 
     if(locations){
       locationSource=locations.map(location=>{
         return {id: location.key, name: location.val.displayName}
       })
-    }
-    const markers =[
-       {
-        position: {
-          lat: 30.2672,
-          lng: -97.7431,
-        }
-      }
-    ]
-    
+    };    
+  
 
+    let markers =[
+              {
+                 pos: {
+                   lat: 30.335455 ,
+                   lng: -97.741373,
+                 },
+                 
+              },
+              {
+                pos: {
+                  lat: 30.224934 ,
+                  lng: -97.853066,
+                 },
+                 
+              },
+  
+    ]
 
 
     return (
@@ -143,6 +157,7 @@ class Locations extends Component {
               value={'locations'}
               icon={<FontIcon className="material-icons">location_city</FontIcon>}>
                 {locationSource.map((val, i) => {
+
                   return (
                      <Card
                       style={{width:'398'}}>
@@ -176,6 +191,7 @@ class Locations extends Component {
              value={'list'}
               icon={<FontIcon className="material-icons">list</FontIcon>}>
               {
+                  isGranted('create_location') &&
                   <List  id='test' style={{height: '100%'}} ref={(field) => { this.list = field; }}>
                     {this.renderList(locations)}
                   </List>
@@ -205,8 +221,10 @@ Locations.propTypes = {
   locations: PropTypes.array.isRequired,
   history: PropTypes.object,
   isGranted: PropTypes.func.isRequired,
+  isOnline: PropTypes.func.isRequired,
   match: PropTypes.object.isRequired,
   muiTheme: PropTypes.object.isRequired,
+  location_coords: PropTypes.array,
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -219,10 +237,12 @@ const mapStateToProps = (state, ownProps) => {
 
   return {
     locations: lists.locations,
+    location_coords: lists.location_coords,
     auth,
     browser,
    // type,
-    isGranted: grant=>isGranted(state, grant)
+    isGranted: grant=>isGranted(state, grant),
+    isOnline: online=>isOnline(state, online)
   };
 };
 

@@ -38,7 +38,7 @@ import NewChurch from '../../utils/resources/yuriy-kovalev-97508.jpg'
 
 
 const path=`/locations/`;
-const pathUsers='/users';
+const pathUsers='users';
 const form_name='location';
 const locationPath=`/locations/`;
 
@@ -50,6 +50,7 @@ class LocationPage extends Component {
   componentWillMount() {
     this.props.watchList('locations');
     this.props.watchList('user_roles');
+    this.props.watchList('users');
     this.props.watchList('locations_online');
     this.props.watchList('admins');
     this.props.watchList('location_reviews');
@@ -114,41 +115,17 @@ class LocationPage extends Component {
         <ListItem
           key={key}
           id={key}
-          onClick={()=>{this.handleRowClick(list[index])}}
           leftAvatar={<Avatar style={{marginTop: 10}} src={user.photoURL} alt="person" icon={<FontIcon className="material-icons" >person</FontIcon>}/>}
-          rightIcon={<FontIcon style={{marginTop: 22}} className="material-icons" color={user.connections?muiTheme.palette.primary1Color:muiTheme.palette.disabledColor}>offline_pin</FontIcon>}>
+          >
 
           <div style={{display: 'flex', flexWrap: 'wrap', alignItems: 'strech'}}>
             <div style={{display: 'flex', flexDirection:'column', width: 120}}>
               <div>
                 {user.displayName}
               </div>
-              <div
-                style={{
-                  fontSize: 14,
-                  lineHeight: '16px',
-                  height: 16,
-                  margin: 0,
-                  marginTop: 4,
-                  color: muiTheme.listItem.secondaryTextColor,
-                }}>
-                {(!user.connections && !user.lastOnline)?intl.formatMessage({id: 'offline'}):intl.formatMessage({id: 'online'})}
-                {' '}
-                {(!user.connections && user.lastOnline)?intl.formatRelative(new Date(user.lastOnline)):undefined}
-              </div>
+              
             </div>
 
-            <div style={{marginLeft: 20, display: 'flex', flexWrap: 'wrap', alignItems: 'center'}}>
-              {user.providerData && user.providerData.map(
-                (p)=>{
-                  return (
-                    <div key={key} style={{paddingLeft: 10}}>
-                      {this.getProviderIcon(p)}
-                    </div>
-                  )
-                })
-              }
-            </div>
           </div>
 
         </ListItem>
@@ -165,19 +142,17 @@ class LocationPage extends Component {
       return <div></div>
     }
 
-    return _.map(reviews, (row, i) => {
+    return _.map(reviews, (review, index) => {
 
-      const review=row.val;
-      const key=row.key;
 
-      return <div key={key}>
+      return <div key={index}>
 
         <ListItem
-          key={key}
+          key={index}
           //onClick={review.userId===auth.uid?()=>{history.push(`/review/edit/${key}`)}:undefined}
-          primaryText={review.title}
-          secondaryText={`${review.userName} ${review.created?intl.formatRelative(new Date(review.created)):undefined}`}
-          leftAvatar={this.userAvatar(key, review)}
+          primaryText={review.val.title}
+          //secondaryText={`${review.userName} ${review.created?intl.formatRelative(new Date(review.created)):undefined}`}
+          //leftAvatar={this.userAvatar(index, review)}
           rightIconButton={
             review.userId===auth.uid?
             <IconButton
@@ -185,7 +160,7 @@ class LocationPage extends Component {
               <FontIcon className="material-icons" color={'red'}>{'delete'}</FontIcon>
             </IconButton>:undefined
           }
-          id={key}
+          id={index}
         />
 
 
@@ -356,7 +331,9 @@ class LocationPage extends Component {
               <Tab
                 label={'Reviews'}>
                   <div>
-                   < Reviews {...this.props}/>
+                   <List  id='test' style={{height: '100%'}} ref={(field) => { this.list = field; }}>
+                       {this.renderList(reviews)}
+                    </List>
                   </div>
               </Tab>
              
@@ -386,7 +363,7 @@ class LocationPage extends Component {
               <Tab
                 label={'Coworkers'}>
                 <Scrollbar>
-                  <List id='test' ref={(field) => { this.list = field; }}>
+                  <List id='users' ref={(field) => { this.list = field; }}>
                     <ReactList
                       itemRenderer={this.renderItem}
                       length={list?list.length:0}
@@ -437,7 +414,7 @@ LocationPage.propTypes = {
   users: PropTypes.array,
   user: PropTypes.array.isRequired,
   reviews: PropTypes.array.isRequired,
-  
+
 };
 
 
@@ -458,6 +435,7 @@ const mapStateToProps = (state, ownProps) => {
     intl,
     roles: lists.roles,
     users: lists.users,
+    reviews: lists.location_reviews,
     user_roles: lists.user_roles,
     user_grants: lists.user_grants,
     admins: lists.admins,
