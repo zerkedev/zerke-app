@@ -17,6 +17,7 @@ import Dialog from 'material-ui/Dialog';
 import { withFirebase } from 'firekit';
 import { change, submit } from 'redux-form';
 import isGranted  from '../../utils/auth';
+import isOnline  from '../../utils/online';
 
 
 const path='/locations/';
@@ -114,20 +115,12 @@ class Location extends Component {
       submit,
       locations_online,
       muiTheme,
-      isGranted
+      isGranted,
+      isOnline,
     }=this.props;
 
     const uid=match.params.uid;
-    let isOnline=false;
-
-    if(locations_online!==undefined){
-      for (let location of locations_online) {
-        if(locations_online.key===uid){
-          isOnline=true;
-          break;
-        }
-      }
-    }
+   
 
 
     const actions = [
@@ -214,6 +207,7 @@ Location.propTypes = {
   submit: PropTypes.func.isRequired,
   muiTheme: PropTypes.object.isRequired,
   isGranted: PropTypes.func.isRequired,
+  isOnline: PropTypes.func.isRequired,
   locations_online: PropTypes.array.isRequired,
 };
 
@@ -232,7 +226,8 @@ const mapStateToProps = (state, ownProps) => {
     uid,
     auth,
     locations_online: lists.locations_online,
-    isGranted: grant=>isGranted(state, grant)
+    isGranted: grant=>isGranted(state, grant),
+    isOnline: online=>isOnline(state, online)
   };
 };
 

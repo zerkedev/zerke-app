@@ -41,6 +41,8 @@ const path=`/locations/`;
 const pathUsers='users';
 const form_name='location';
 const locationPath=`/locations/`;
+const currentDay=new Date().getFullYear();
+
 
 
 class LocationPage extends Component {
@@ -97,7 +99,9 @@ class LocationPage extends Component {
         history.goBack();
       })
     }
+
   }
+
 
   handleUpdateValues = (values) => {
 
@@ -105,6 +109,13 @@ class LocationPage extends Component {
       updated: firebase.database.ServerValue.TIMESTAMP ,
       ...values
     }
+  }
+
+  handleDestroyValues = (values) => {
+    if(currentDay!=firebase.database.ServerValue.TIMESTAMP)
+      console.log(values)
+      //firebaseApp.database().ref(`/locations/${uid}/`).destroy(`coworkersHere`)
+
   }
 
   renderItem = (index, key) => {
@@ -156,7 +167,7 @@ class LocationPage extends Component {
           rightIconButton={
             review.userId===auth.uid?
             <IconButton
-              style={{display:browser.lessThan.medium?'none':undefined}}>
+             >
               <FontIcon className="material-icons" color={'red'}>{'delete'}</FontIcon>
             </IconButton>:undefined
           }

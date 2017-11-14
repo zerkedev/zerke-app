@@ -20,6 +20,7 @@ const currentYear=new Date().getFullYear();
 const daysPath=`/user_registrations_per_day/${currentYear}/${new Date().toISOString().slice(5, 7)}`;
 const monthsPath=`/user_registrations_per_month/${currentYear}`;
 const providerPath=`/provider_count`;
+const locationPath=`/locations_count`;
 
 
 class Home extends Component {
@@ -29,14 +30,14 @@ class Home extends Component {
 
     //watchPath(moneyToLocations);
     //watchPath(days_count);
-   // watchPath(locations_count);
-    watchPath('users_count');
+    //watchPath('locations_count');
+    //watchPath('users_count');
 
   }
 
   render() {
 
-    const {muiTheme, intl, days, months, providers, usersCount}= this.props;
+    const {muiTheme, intl, days, months, providers, locationsCount, usersCount}= this.props;
 
 
 
@@ -108,7 +109,7 @@ class Home extends Component {
                   fontFamily: muiTheme.fontFamily,
                 }}
                 start={0}
-                end={usersCount}
+                end={locationsCount}
               />
               <div>
                 <FontIcon
@@ -187,6 +188,7 @@ const mapStateToProps = (state) => {
 
   return {
     usersCount: paths['users_count']?paths['users_count']:0,
+    locationsCount: paths['locations_count']?paths['locations_count']:0,
   };
 };
 

@@ -25,7 +25,7 @@ import LocationsMap from '../../utils/resources/locationsmap.png'
 import NewChurch from '../../utils/resources/POL_Warsawa_Wawrzyszew_new_church.JPG'
 
 const path='/locations';
-
+const paths='/locations_online';
 
 
 class Locations extends Component {
@@ -103,14 +103,21 @@ class Locations extends Component {
         return {id: location.key, name: location.val.displayName}
       })
     };    
+
+
   
 
     let markers =[
               {
                  pos: {
-                   lat: 30.335455 ,
+                    lat: 30.335455 ,
+                   //lat: location_coords.lat, 
                    lng: -97.741373,
+                   //lng: location_coords.lng
                  },
+                 id: {
+                    name: 'st Johns'
+                 }
                  
               },
               {
@@ -118,8 +125,12 @@ class Locations extends Component {
                   lat: 30.224934 ,
                   lng: -97.853066,
                  },
+                id: {
+                  name: 'SHPC'
+                }
                  
               },
+                
   
     ]
 
