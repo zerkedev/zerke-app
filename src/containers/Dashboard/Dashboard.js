@@ -43,23 +43,11 @@ class Dashboard extends Component {
         snapshot.ref.remove();
     });
   }
-  handleDestroyUsers = (values) => {
 
-    const {history, auth, match, firebaseApp}=this.props;
-
-
-    var ref = firebaseApp.database().ref('/locations/{uid}/coworkersHere');
-    var now = Date.now();
-    var cutoff = now + 8640000;
-    var old = ref.orderByChild('timestamp').endAt(cutoff).limitToLast(1);
-    var listener = old.on('child_added', function(snapshot) {
-        snapshot.ref.remove();
-    });
-  }
 
   render() {
 
-    const {muiTheme, intl, days, months, providers, usersCount}= this.props;
+    const {muiTheme, intl, days, months, providers, usersCount, firebaseApp, uid}= this.props;
 
 
     let daysLabels=[];
@@ -191,7 +179,8 @@ class Dashboard extends Component {
         <FlatButton
             label={intl.formatMessage({id: 'reset_users_online'})}
             primary={true}
-            onClick={this.handleDestroyUsers}
+            onClick={() => { firebaseApp.database().ref(`/locations/:uid/coworkersHere/`).remove();}
+          }
         />
         </Card>
         </div>

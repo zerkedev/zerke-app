@@ -88,18 +88,18 @@ const DrawerContent = (props, context) => {
       leftIcon: <FontIcon className="material-icons" >map</FontIcon>
     },
   
-    {
-      value:'/posts',
-      visible: isAuthorised,
-      primaryText: intl.formatMessage({id: 'Forums'}),
-      leftIcon: <FontIcon className="material-icons" >list</FontIcon>
-    },
-     {
-      value:'/billing',
-      visible: isAuthorised,
-      primaryText: intl.formatMessage({id: 'Billing History'}),
-      leftIcon: <FontIcon className="material-icons" >credit_card</FontIcon>
-    },
+    //{
+    //   value:'/posts',
+    //   visible: isAuthorised,
+    //   primaryText: intl.formatMessage({id: 'Forums'}),
+    //   leftIcon: <FontIcon className="material-icons" >list</FontIcon>
+    // },
+    //  {
+    //   value:'/billing',
+    //   visible: isAuthorised,
+    //   primaryText: intl.formatMessage({id: 'Billing History'}),
+    //   leftIcon: <FontIcon className="material-icons" >credit_card</FontIcon>
+    // },
     {
       visible: isAuthorised,
       primaryText: intl.formatMessage({id: 'chats'}),

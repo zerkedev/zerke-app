@@ -116,8 +116,11 @@ class Locations extends Component {
                    //lng: location_coords.lng
                  },
                  id: {
-                    name: 'st Johns'
-                 }
+                    name: 'st Johns',
+                    key: '-KwosyD-d_EZ0M-8UUl1'
+                 },
+                 
+              
                  
               },
               {
@@ -126,8 +129,10 @@ class Locations extends Component {
                   lng: -97.853066,
                  },
                 id: {
-                  name: 'SHPC'
-                }
+                  name: 'SHPC',
+                  key: '-KxO6OTdSc7o-HV3531O'
+                },
+            
                  
               },
                 
