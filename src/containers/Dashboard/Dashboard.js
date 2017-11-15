@@ -9,6 +9,8 @@ import {Line, Bar, Doughnut} from 'react-chartjs-2';
 import { withFirebase } from 'firekit';
 import CountUp from 'react-countup';
 import FontIcon from 'material-ui/FontIcon';
+import { Card, CardHeader, CardMedia, CardTitle, CardActions, CardText } from 'material-ui/Card';
+
 
 const currentYear=new Date().getFullYear();
 const daysPath=`/user_registrations_per_day/${currentYear}/${new Date().toISOString().slice(5, 7)}`;
@@ -26,6 +28,33 @@ class Dashboard extends Component {
     watchPath(providerPath);
     watchPath('users_count');
 
+  }
+
+  handleDestroyLocations = (values) => {
+
+    const {history, auth, match, firebaseApp}=this.props;
+
+
+    var ref = firebaseApp.database().ref('/locations_online/');
+    var now = Date.now();
+    var cutoff = now + 8640000;
+    var old = ref.orderByChild('timestamp').endAt(cutoff).limitToLast(1);
+    var listener = old.on('child_added', function(snapshot) {
+        snapshot.ref.remove();
+    });
+  }
+  handleDestroyUsers = (values) => {
+
+    const {history, auth, match, firebaseApp}=this.props;
+
+
+    var ref = firebaseApp.database().ref('/locations/{uid}/coworkersHere');
+    var now = Date.now();
+    var cutoff = now + 8640000;
+    var old = ref.orderByChild('timestamp').endAt(cutoff).limitToLast(1);
+    var listener = old.on('child_added', function(snapshot) {
+        snapshot.ref.remove();
+    });
   }
 
   render() {
@@ -152,6 +181,20 @@ class Dashboard extends Component {
           />
         }
         title={intl.formatMessage({id: 'dashboard'})}>
+        <div>
+        <Card>
+        <FlatButton
+            label={intl.formatMessage({id: 'reset_locations_online'})}
+            primary={true}
+            onClick={this.handleDestroyLocations}
+        />
+        <FlatButton
+            label={intl.formatMessage({id: 'reset_users_online'})}
+            primary={true}
+            onClick={this.handleDestroyUsers}
+        />
+        </Card>
+        </div>
 
         <div style={{margin: 5, display: 'flex', flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center'}}>
           <div style={{flexGrow: 1, flexShrink: 1, maxWidth: 600}}>

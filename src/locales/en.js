@@ -162,6 +162,8 @@ const messages=defineMessages({
   error_required_field: 'Error Required Field',
   cowork_here_title: 'Cowork Here?',
   cowork_here_message: 'You will spend 1 credit',
+  reset_locations_online: 'Reset Locations',
+  reset_users_online: ' Reset Users',
 });
 
 export default messages;

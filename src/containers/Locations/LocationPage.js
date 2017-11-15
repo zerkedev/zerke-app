@@ -41,7 +41,13 @@ const path=`/locations/`;
 const pathUsers='users';
 const form_name='location';
 const locationPath=`/locations/`;
-const currentDay=new Date().getFullYear();
+const timePath=`/locations_online`;
+const currentYear=new Date().getFullYear();
+const currentDay=new Date().toString();
+
+
+
+
 
 
 
@@ -84,6 +90,9 @@ class LocationPage extends Component {
     setDialogIsOpen('cowork_here', false);
 
   }
+
+
+
   handleConfirm = () => {
 
     const {history, auth, match, firebaseApp}=this.props;
@@ -91,11 +100,16 @@ class LocationPage extends Component {
     const userId=auth.uid;
 
 
+  //  Timer.schedule(TimerTask .handleDestroyValues, Date .now + 12 * 60 * 60 * 1000);
+
+
+
     if(uid){
       firebaseApp.database().ref(`/locations/${uid}/coworkersHere/${userId}`).set(true)
       .then(()=>{
         this.handleUpdateValues();
         this.handleClose();
+        alert(currentDay);
         history.goBack();
       })
     }
@@ -111,12 +125,7 @@ class LocationPage extends Component {
     }
   }
 
-  handleDestroyValues = (values) => {
-    if(currentDay!=firebase.database.ServerValue.TIMESTAMP)
-      console.log(values)
-      //firebaseApp.database().ref(`/locations/${uid}/`).destroy(`coworkersHere`)
-
-  }
+ 
 
   renderItem = (index, key) => {
       const { list, intl, muiTheme } = this.props;
