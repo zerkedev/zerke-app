@@ -36,7 +36,6 @@ import LocationForm from '../../components/Forms/LocationForm';
 import NewChurch from '../../utils/resources/yuriy-kovalev-97508.jpg'
 
 
-
 const path=`/locations/`;
 const pathUsers='users';
 const form_name='location';
@@ -44,11 +43,6 @@ const locationPath=`/locations/`;
 const timePath=`/locations_online`;
 const currentYear=new Date().getFullYear();
 const currentDay=new Date().toString();
-
-
-
-
-
 
 
 class LocationPage extends Component {
@@ -66,15 +60,20 @@ class LocationPage extends Component {
   };
 
   
-
   componentDidMount() {
-    const { watchList, firebaseApp}=this.props;
+    const { watchList, firebaseApp, key, uid}=this.props;
 
     this.props.watchList(pathUsers);
 
     let ref=firebaseApp.database().ref(`locations/`);
 
     watchList(ref);
+
+    let reviewRef=firebaseApp.database().ref(`location_reviews/${uid}/${key}`);
+    watchList(reviewRef);
+
+    let coworkersHereRef=firebaseApp.database().ref(`locations/${uid}/coworkersHere/`);
+    watchList(coworkersHereRef);
   }
 
   handleTabActive = (value) => {
@@ -109,7 +108,6 @@ class LocationPage extends Component {
       .then(()=>{
         this.handleUpdateValues();
         this.handleClose();
-        alert(currentDay);
         history.goBack();
       })
     }
@@ -127,36 +125,68 @@ class LocationPage extends Component {
 
  
 
-  renderItem = (index, key) => {
-      const { list, intl, muiTheme } = this.props;
-      const user = list[index].val;
+  renderList(users) {
+      const { auth, intl, history, browser, setDialogIsOpen, match} =this.props;
+      const uid=match.params.uid
 
-      return <div key={key}>
-        <ListItem
-          key={key}
-          id={key}
-          leftAvatar={<Avatar style={{marginTop: 10}} src={user.photoURL} alt="person" icon={<FontIcon className="material-icons" >person</FontIcon>}/>}
-          >
+      if(users===undefined){
+        return <div></div>
+      }
 
-          <div style={{display: 'flex', flexWrap: 'wrap', alignItems: 'strech'}}>
-            <div style={{display: 'flex', flexDirection:'column', width: 120}}>
-              <div>
-                {user.displayName}
-              </div>
-              
-            </div>
+      return _.map(users, (user, index) => {
 
+
+        return <div key={index}>
+
+          <ListItem
+            key={index}
+            rightIconButton={
+              user.userId.displayName===auth.uid?
+              <IconButton
+               >
+                <FontIcon className="material-icons" color={'red'}>{'delete'}</FontIcon>
+              </IconButton>:undefined
+            }
+            id={index}
+          />
+            <Divider inset={true}/>
           </div>
+        });
+      }
 
-        </ListItem>
-        <Divider inset={true}/>
-      </div>
+  //firebaseApp.database().ref(`/locations/${uid}/coworkersHere/${userId}`)
+
+  renderList(locations) {
+    const { auth, intl, history, browser, setDialogIsOpen, match} =this.props;
+    const uid=match.params.uid
+
+    if(locations===undefined){
+      return <div></div>
     }
 
-  ////renderList(users){}
+    return _.map(locations, (location, index) => {
+
+      
+
+      return <div key={index}>
+
+        <ListItem
+          key={index}
+          primaryText={locations[uid]?locations[uid].val.name:undefined}
+          secondaryText={locations.val.name}
+          primary={true}
+          id={index}
+        />
+
+
+        <Divider inset={true}/>
+      </div>
+    });
+  }
   
   renderList(reviews) {
-    const { auth, intl, history, browser, setDialogIsOpen} =this.props;
+    const { auth, intl, history, browser, setDialogIsOpen, match} =this.props;
+    const uid=match.params.uid
 
     if(reviews===undefined){
       return <div></div>
@@ -170,7 +200,7 @@ class LocationPage extends Component {
         <ListItem
           key={index}
           //onClick={review.userId===auth.uid?()=>{history.push(`/review/edit/${key}`)}:undefined}
-          primaryText={review.val.title}
+          primaryText={review.key}
           //secondaryText={`${review.userName} ${review.created?intl.formatRelative(new Date(review.created)):undefined}`}
           //leftAvatar={this.userAvatar(index, review)}
           rightIconButton={
@@ -182,6 +212,10 @@ class LocationPage extends Component {
           }
           id={index}
         />
+
+
+     
+  
 
 
         <Divider inset={true}/>
@@ -206,9 +240,13 @@ class LocationPage extends Component {
       ref,
       editType,
       reviews,
+      reviewRef,
+      coworkersHere,
       locationDataRef,
       list,
+      users,
       locations,
+      location,
       setFilterIsOpen,
       hasFilters,
       firebaseApp,
@@ -351,46 +389,24 @@ class LocationPage extends Component {
               <Tab
                 label={'Reviews'}>
                   <div>
-                   <List  id='test' style={{height: '100%'}} ref={(field) => { this.list = field; }}>
+                   <List  id='list' style={{height: '100%'}} ref={(field) => { this.list = field; }}>
                        {this.renderList(reviews)}
                     </List>
                   </div>
               </Tab>
              
-              <Tab
-                label={'Rooms'}> 
-                {
-                 <div>
-                   <Card>
-                     <CardHeader
-                       title="Rooms"
-                       subtitle='{locations[i]?locations[i].val.location_instructions:undefined}'
-                     />
-                   
-                         
-                       <CardText>
-                      
-                      This also has information about room rentals.
-                     </CardText>
-                     
-                 
-                   </Card>
-                </div>
-                }           
-              </Tab>
+              
 
-               isGranted('edit_location') &&
+              isGranted('edit_location') &&
               <Tab
-                label={'Coworkers'}>
-                <Scrollbar>
-                  <List id='users' ref={(field) => { this.list = field; }}>
-                    <ReactList
-                      itemRenderer={this.renderItem}
-                      length={list?list.length:0}
-                      type='simple'
-                    />
-                  </List>
-                </Scrollbar>
+                label={'Coworkers'}
+                value={'list'}>
+                <div>
+                  <List  id='test' style={{height: '100%'}} ref={(field) => { this.list = field; }}>
+                      {this.renderList(users)}
+                   </List>
+                 </div>
+                 
               
               </Tab>
             </Tabs>
@@ -400,7 +416,7 @@ class LocationPage extends Component {
         <div style={{position: 'fixed', right: 18, zIndex:3, bottom: 18, }}>
         {
             isGranted('edit_location') &&
-            <FloatingActionButton secondary={true} onClick={()=>{history.push(`/locations/${uid}/edit`)}} style={{zIndex:3}}>
+            <FloatingActionButton secondary={true} onClick={()=>{history.push(`/locations/edit/${uid}`)}} style={{zIndex:3}}>
               <FontIcon className="material-icons" >edit</FontIcon>
             </FloatingActionButton>
         }
@@ -434,6 +450,9 @@ LocationPage.propTypes = {
   users: PropTypes.array,
   user: PropTypes.array.isRequired,
   reviews: PropTypes.array.isRequired,
+  location_reviews: PropTypes.array,
+  coworkersHere: PropTypes.array,
+  locations: PropTypes.array.isRequired,
 
 };
 
@@ -454,6 +473,7 @@ const mapStateToProps = (state, ownProps) => {
     editType,
     intl,
     roles: lists.roles,
+    locations: lists.locations,
     users: lists.users,
     reviews: lists.location_reviews,
     user_roles: lists.user_roles,

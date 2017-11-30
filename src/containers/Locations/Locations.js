@@ -49,7 +49,8 @@ class Locations extends Component {
   
 
   renderList(locations) {
-    const {history} =this.props;
+    const {history, muiTheme, paths} =this.props;
+
 
     if(locations===undefined){
       return <div></div>
@@ -77,14 +78,8 @@ class Locations extends Component {
           id={index}
           onClick={()=>{history.push(`/locations/${location.key}`)}}
 
-          rightIconButton={
-
-            <FontIcon 
-            onClick={()=>{history.push(`/locations/edit/${location.key}`)}}
-            className="material-icons">
-              edit
-            </FontIcon>
-          }
+          rightIcon={<FontIcon style={{marginTop: 22}} className="material-icons" color={paths?muiTheme.palette.primary1Color:muiTheme.palette.disabledColor}>offline_pin</FontIcon>}
+          
         />
         <Divider inset={true}/>
       </div>

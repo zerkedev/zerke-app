@@ -9,7 +9,7 @@ import {Line, Bar, Doughnut} from 'react-chartjs-2';
 import { withFirebase } from 'firekit';
 import CountUp from 'react-countup';
 import FontIcon from 'material-ui/FontIcon';
-import { Card, CardHeader, CardMedia, CardTitle, CardActions, CardText } from 'material-ui/Card';
+import { Card, CardHeader, CardMedia, CardTitle } from 'material-ui/Card';
 
 
 const currentYear=new Date().getFullYear();
@@ -171,6 +171,7 @@ class Dashboard extends Component {
         title={intl.formatMessage({id: 'dashboard'})}>
         <div>
         <Card>
+        <CardTitle primary={true} primaryText={ 'Commands'}/>
         <FlatButton
             label={intl.formatMessage({id: 'reset_locations_online'})}
             primary={true}
@@ -179,7 +180,7 @@ class Dashboard extends Component {
         <FlatButton
             label={intl.formatMessage({id: 'reset_users_online'})}
             primary={true}
-            onClick={() => { firebaseApp.database().ref(`/locations/:uid/coworkersHere/`).remove();}
+            onClick={() => { firebaseApp.database().ref(`/locations/-KwosyD-d_EZ0M-8UUl1/coworkersHere/`).remove();}
           }
         />
         </Card>
