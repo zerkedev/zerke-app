@@ -10,7 +10,7 @@ export default function isOnline(state, online) {
 
   const { auth, lists, paths, match } = state
 
-  const isOnline=paths[`locations_online/`];
+  const isOnline=paths[`locations/`];
 
   if(isOnline!==true){
     return false;

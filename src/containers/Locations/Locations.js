@@ -34,7 +34,7 @@ class Locations extends Component {
     const { watchList, firebaseApp}=this.props;
 
     let ref=firebaseApp.database().ref('locations').limitToFirst(20);
-    let coordsRef=firebaseApp.database().ref('location_coords')
+    let coordsRef=firebaseApp.database().ref(`locations`);
     watchList(ref);
     watchList(coordsRef);
   }
@@ -88,51 +88,37 @@ class Locations extends Component {
 
 
 
-  render(i, keys){
+  render (i, keys){
     const { intl, locations, locationId,  location_coords, match, firebaseApp, muiTheme, history, isGranted,   } =this.props;
-
+    let ref=firebaseApp.database().ref('locations').limitToFirst(20);
     let locationSource=[];
 
     if(locations){
-      locationSource=locations.map(location=>{
+      locationSource=locations
+        .filter(location=>{
+        return location.val.online
+      })
+        .map(location=>{
         return {id: location.key, name: location.val.displayName}
       })
     };    
 
 
-  
+    let markers =[];
+    console.log('locations', locations)
+    markers=locations
+      .filter(location=>{
+      return location.val.online
+    })
+      .map(location=>{
+      return {id: location.key, name: location.val.full_name, pos: location.val.pos, key:location.id}
+    })
 
-    let markers =[
-              {
-                 pos: {
-                    lat: 30.335455 ,
-                   //lat: location_coords.lat, 
-                   lng: -97.741373,
-                   //lng: location_coords.lng
-                 },
-                 id: {
-                    name: 'st Johns',
-                    key: '-KwosyD-d_EZ0M-8UUl1'
-                 },
-                 
-              
-                 
-              },
-              {
-                pos: {
-                  lat: 30.224934 ,
-                  lng: -97.853066,
-                 },
-                id: {
-                  name: 'SHPC',
-                  key: '-KxO6OTdSc7o-HV3531O'
-                },
-            
-                 
-              },
-                
   
-    ]
+    console.log(ref);
+                  
+          
+   
 
 
     return (

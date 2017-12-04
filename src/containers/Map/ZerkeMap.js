@@ -19,25 +19,27 @@ class ZerkeMap extends Component {
 
   render(){
     const { history, locations, match } = this.props;
-    const uid=match.params.uid;;
-    const markers = this.props.markers.map((location_coords, i) => {
+    const uid=match.params.uid;
+
+    console.log('markers', this.props.markers);
+    const markers = this.props.markers.map((location, i) => {
       const marker = {
         position: {
-          lat: location_coords.pos.lat,
-          lng: location_coords.pos.lng,
+          lat: location.pos.lat,
+          lng: location.pos.lng,
         },
-        id: location_coords.id,
-        key: location_coords.key
+        id: location.id,
+        key: location.key
       }
 
-      return <Marker key={i} id={i}  onClick={()=>{history.push(`/locations/${location_coords.id.key}`)}} {...marker}>
+      return <Marker key={i} id={i}  onClick={()=>{history.push(`/locations/${location.id}`)}} {...marker}>
       >
       <InfoWindow  
           onCloseClick={this.props.setMarkerIsOpen}
 
           >
           <div>
-            {location_coords.id.name}
+            {location.name}
           </div>
         </InfoWindow>
       </Marker>

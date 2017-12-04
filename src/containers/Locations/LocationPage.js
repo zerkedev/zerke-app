@@ -125,15 +125,21 @@ class LocationPage extends Component {
 
  
 
-  renderList(users) {
+  renderList(locations) {
       const { auth, intl, history, browser, setDialogIsOpen, match} =this.props;
       const uid=match.params.uid
 
-      if(users===undefined){
+      if(locations===undefined){
         return <div></div>
       }
 
-      return _.map(users, (user, index) => {
+      return 
+
+      _.filter(locations, (location, index) => {
+        return location.val.coworkersHere
+      })
+
+      _.map(locations, (location, index) => {
 
 
         return <div key={index}>
@@ -141,7 +147,7 @@ class LocationPage extends Component {
           <ListItem
             key={index}
             rightIconButton={
-              user.userId.displayName===auth.uid?
+              locations.userId.displayName===auth.uid?
               <IconButton
                >
                 <FontIcon className="material-icons" color={'red'}>{'delete'}</FontIcon>

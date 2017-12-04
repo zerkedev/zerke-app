@@ -35,9 +35,9 @@ class LocationForm extends Component {
     const uid=match.params.uid;
 
     if(isInputChecked){
-      firebaseApp.database().ref(`/locations_online/${uid}`).set(true);
+      firebaseApp.database().ref(`/locations/${uid}/online`).set(true);
     }else{
-      firebaseApp.database().ref(`/locations_online/${uid}`).remove();
+      firebaseApp.database().ref(`/locations/${uid}/online`).remove();
     }
 
   }
@@ -49,7 +49,9 @@ class LocationForm extends Component {
       initialized,
       setDialogIsOpen,
       handleOnlineChange,
-      locations_online,
+      location,
+      online,
+      isInputChecked,
       isOnline,
       dialogs,
       match,
@@ -198,8 +200,12 @@ class LocationForm extends Component {
       <div style={{marginLeft: 20, display: 'flex', flexWrap: 'wrap', alignItems: 'center'}}>
         
         <Toggle
+         path={`locations/${uid}/online`}
          label={intl.formatMessage({id: 'is_online_label'})}
-         //toggled={is[val]===true}
+         name="online"
+         toggled={online===true}
+         ref="online"
+         withRef
          onToggle={(e, isInputChecked)=>{this.handleOnlineChange(e, isInputChecked)}}
         />
       </div>
@@ -215,6 +221,7 @@ LocationForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   intl: intlShape.isRequired,
   initialized: PropTypes.bool.isRequired,
+  online: PropTypes.bool,
   handleOnlineChange: PropTypes.func.isRequired,
   setDialogIsOpen: PropTypes.func.isRequired,
   isOnline: PropTypes.bool.isRequired,
