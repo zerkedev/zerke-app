@@ -10,7 +10,7 @@ import { Activity } from '../../containers/Activity';
 import { setDialogIsOpen } from '../../store/dialogs/actions';
 import {List, ListItem} from 'material-ui/List';
 import Divider from 'material-ui/Divider';
-import ReactList from 'react-list';
+//import ReactList from 'react-list';
 import FontIcon from 'material-ui/FontIcon';
 import IconButton from 'material-ui/IconButton';
 import TextField from 'material-ui/TextField';
@@ -88,7 +88,6 @@ class Reviews extends Component {
 
 
   userAvatar = (key, review) => {
-    const {auth} =this.props;
 
     return review.completed?
     <Avatar

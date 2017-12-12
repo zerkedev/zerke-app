@@ -9,7 +9,7 @@ import {Line, Bar, Doughnut} from 'react-chartjs-2';
 import { withFirebase } from 'firekit';
 import CountUp from 'react-countup';
 import FontIcon from 'material-ui/FontIcon';
-import { Card, CardHeader, CardMedia, CardTitle } from 'material-ui/Card';
+import { Card, CardTitle } from 'material-ui/Card';
 
 
 const currentYear=new Date().getFullYear();
@@ -30,24 +30,12 @@ class Dashboard extends Component {
 
   }
 
-  handleDestroyLocations = (values) => {
-
-    const {history, auth, match, firebaseApp}=this.props;
-
-
-    var ref = firebaseApp.database().ref('/locations_online/');
-    var now = Date.now();
-    var cutoff = now + 8640000;
-    var old = ref.orderByChild('timestamp').endAt(cutoff).limitToLast(1);
-    var listener = old.on('child_added', function(snapshot) {
-        snapshot.ref.remove();
-    });
-  }
+  
 
 
   render() {
 
-    const {muiTheme, intl, days, months, providers, usersCount, firebaseApp, uid}= this.props;
+    const {muiTheme, intl, days, months, providers, usersCount, firebaseApp, }= this.props;
 
 
     let daysLabels=[];

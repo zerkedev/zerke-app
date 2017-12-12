@@ -164,6 +164,11 @@ const messages=defineMessages({
   cowork_here_message: 'You will spend 1 credit',
   reset_locations_online: 'Reset Locations',
   reset_users_online: ' Reset Users',
+  confirm: 'Confirm',
+  amenities_label: 'Location Ammenities',
+  amenities_hint: 'Ammenities',
+
+
 });
 
 export default messages;

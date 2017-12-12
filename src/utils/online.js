@@ -8,7 +8,7 @@ export const online = [
 
 export default function isOnline(state, online) {
 
-  const { auth, lists, paths, match } = state
+  const { paths, } = state
 
   const isOnline=paths[`locations/`];
 

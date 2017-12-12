@@ -114,14 +114,14 @@ class Posts extends Component {
   }
 
   handleTabActive = (value) => {
-    const { history, uid } = this.props;
+    const { history } = this.props;
 
     history.push(`${path}/`);
 
   }
 
   renderList(posts) {
-    const { auth, intl, history, browser, muiTheme, setDialogIsOpen} =this.props;
+    const { auth, intl, history, muiTheme, } =this.props;
 
     if(posts===undefined){
       return <div></div>

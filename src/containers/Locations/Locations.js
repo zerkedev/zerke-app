@@ -16,16 +16,10 @@ import { withFirebase } from 'firekit';
 import isGranted  from '../../utils/auth';
 import isOnline  from '../../utils/online';
 import { Tabs, Tab } from 'material-ui/Tabs';
-import { Card, CardHeader, CardMedia, CardTitle, CardActions, CardText } from 'material-ui/Card';
-import {FlatButton} from 'material-ui/FlatButton';
+import { Card, CardHeader, CardMedia, CardTitle, CardText } from 'material-ui/Card';
 import Scrollbar from '../../components/Scrollbar/Scrollbar';
-import MapMarkers from '../../components/Map/MapMarkers';
-import {withScriptjs, withGoogleMap, GoogleMap, Marker, InfoWindow } from 'react-google-maps';
-import LocationsMap from '../../utils/resources/locationsmap.png'
-import NewChurch from '../../utils/resources/POL_Warsawa_Wawrzyszew_new_church.JPG'
 
 const path='/locations';
-const paths='/locations_online';
 
 
 class Locations extends Component {
@@ -40,7 +34,7 @@ class Locations extends Component {
   }
 
   handleTabActive = (value) => {
-    const { history, uid } = this.props;
+    const { history } = this.props;
 
     history.push(`${path}/`);
 
@@ -89,7 +83,7 @@ class Locations extends Component {
 
 
   render (i, keys){
-    const { intl, locations, locationId,  location_coords, match, firebaseApp, muiTheme, history, isGranted,   } =this.props;
+    const { intl, locations, firebaseApp, history, isGranted, } =this.props;
     let ref=firebaseApp.database().ref('locations').limitToFirst(20);
     let locationSource=[];
 
@@ -157,7 +151,7 @@ class Locations extends Component {
 
                   return (
                      <Card
-                      style={{width:'398'}}>
+                      style={{width:''}}>
                       <div key={val.id} value={val.id?val.id:i} label={val.name} 
                            onClick={()=>{history.push(`/locations/${locations[i].key}`)}}>
                         <CardHeader
@@ -226,10 +220,8 @@ Locations.propTypes = {
 
 const mapStateToProps = (state, ownProps) => {
   const { auth, browser, lists } = state;
-  const { match } = ownProps;
+  //const { match } = ownProps;
 
-  const uid=match.params.uid;
-  //const type = match.params.type?match.params.type:'data';
 
 
   return {

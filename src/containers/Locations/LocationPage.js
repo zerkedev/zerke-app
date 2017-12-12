@@ -37,7 +37,7 @@ import NewChurch from '../../utils/resources/yuriy-kovalev-97508.jpg'
 
 
 const path=`/locations/`;
-const pathUsers='users';
+const pathUsers=`/users`;
 const form_name='location';
 const locationPath=`/locations/`;
 const timePath=`/locations_online`;
@@ -55,7 +55,7 @@ class LocationPage extends Component {
     this.props.watchList('users');
     this.props.watchList('locations_online');
     this.props.watchList('admins');
-    this.props.watchList('location_reviews');
+    this.props.watchList('reviews');
 
   };
 
@@ -65,9 +65,13 @@ class LocationPage extends Component {
 
     this.props.watchList(pathUsers);
 
-    let ref=firebaseApp.database().ref(`locations/`);
+    let ref=firebaseApp.database().ref(`/users/`);
 
     watchList(ref);
+
+    let userRef=firebaseApp.database().ref(`/users/`);
+
+    watchList(userRef);
 
     let reviewRef=firebaseApp.database().ref(`location_reviews/${uid}/${key}`);
     watchList(reviewRef);
@@ -125,52 +129,17 @@ class LocationPage extends Component {
 
  
 
-  renderList(locations) {
-      const { auth, intl, history, browser, setDialogIsOpen, match} =this.props;
-      const uid=match.params.uid
 
-      if(locations===undefined){
-        return <div></div>
-      }
-
-      return 
-
-      _.filter(locations, (location, index) => {
-        return location.val.coworkersHere
-      })
-
-      _.map(locations, (location, index) => {
-
-
-        return <div key={index}>
-
-          <ListItem
-            key={index}
-            rightIconButton={
-              locations.userId.displayName===auth.uid?
-              <IconButton
-               >
-                <FontIcon className="material-icons" color={'red'}>{'delete'}</FontIcon>
-              </IconButton>:undefined
-            }
-            id={index}
-          />
-            <Divider inset={true}/>
-          </div>
-        });
-      }
-
-  //firebaseApp.database().ref(`/locations/${uid}/coworkersHere/${userId}`)
-
-  renderList(locations) {
-    const { auth, intl, history, browser, setDialogIsOpen, match} =this.props;
+  renderList(users) {
+    const { auth, list, intl, history, browser, setDialogIsOpen, match} =this.props;
     const uid=match.params.uid
 
-    if(locations===undefined){
+    if(users===undefined){
       return <div></div>
+
     }
 
-    return _.map(locations, (location, index) => {
+    return _.map(users, (user, index) => {
 
       
 
@@ -178,61 +147,51 @@ class LocationPage extends Component {
 
         <ListItem
           key={index}
-          primaryText={locations[uid]?locations[uid].val.name:undefined}
-          secondaryText={locations.val.name}
+          primaryText={user.displayName}
+          secondaryText={user.val.uid}
           primary={true}
           id={index}
         />
 
-
         <Divider inset={true}/>
+
       </div>
     });
   }
+
   
   renderList(reviews) {
-    const { auth, intl, history, browser, setDialogIsOpen, match} =this.props;
-    const uid=match.params.uid
+      const { auth, intl, history, browser, setDialogIsOpen, match} =this.props;
+      const uid=match.params.uid
 
-    if(reviews===undefined){
-      return <div></div>
-    }
+      if(reviews===undefined){
+        return <div></div>
+      }
 
-    return _.map(reviews, (review, index) => {
+      return _.map(reviews, (review, index) => {
 
+        
 
-      return <div key={index}>
+        return <div key={index}>
 
-        <ListItem
-          key={index}
-          //onClick={review.userId===auth.uid?()=>{history.push(`/review/edit/${key}`)}:undefined}
-          primaryText={review.key}
-          //secondaryText={`${review.userName} ${review.created?intl.formatRelative(new Date(review.created)):undefined}`}
-          //leftAvatar={this.userAvatar(index, review)}
-          rightIconButton={
-            review.userId===auth.uid?
-            <IconButton
-             >
-              <FontIcon className="material-icons" color={'red'}>{'delete'}</FontIcon>
-            </IconButton>:undefined
-          }
-          id={index}
-        />
+          <ListItem
+            key={index}
+            primaryText={review.val.title}
+            secondaryText={review.val.userName}
+            primary={true}
+            id={index}
+          />
 
 
-     
-  
-
-
-        <Divider inset={true}/>
-      </div>
-    });
+          <Divider inset={true}/>
+        </div>
+      });
   }
 
   
 
 
-  render() {
+  render(i, keys) {
 
     const {
       history,
@@ -243,7 +202,6 @@ class LocationPage extends Component {
       dialogs,
       match,
       admins,
-      ref,
       editType,
       reviews,
       reviewRef,
@@ -259,12 +217,36 @@ class LocationPage extends Component {
       locationId,
       isGranted
     } = this.props;
+    const uid=match.params.uid;
 
+    let ref=firebaseApp.database().ref('reviews').limitToFirst(20);
+    let reviewSource=[];
+
+    if(reviews){
+      reviewSource=reviews
+        .filter(review=>{
+        return review.val.location===uid
+      })
+        .map(review=>{
+        return {id: review.key, name: review.val.displayName}
+      })
+    };    
+
+    let userRef=firebaseApp.database().ref('locations').limitToFirst(20);
+    let userSource=[];
+    if(users){
+        userSource=users
+          .filter(user=>{
+          return user.val.location===uid
+        })
+          .map(user=>{
+          return {id: user.key, name: user.val.displayName}
+        })
+      };   
 
 
  
 
-    const uid=match.params.uid;
     let isAdmin=false;
 
     if(admins!==undefined){
@@ -335,9 +317,9 @@ class LocationPage extends Component {
                <CardMedia
                  overlay={<CardTitle 
                             title='zerke space'
-                            path={path}
+                            //path={path}
                             ref="name"
-                            withRef
+                            //withRef
                             subtitle="location_distance"
                             />}
                >
@@ -394,11 +376,20 @@ class LocationPage extends Component {
            
               <Tab
                 label={'Reviews'}>
-                  <div>
-                   <List  id='list' style={{height: '100%'}} ref={(field) => { this.list = field; }}>
-                       {this.renderList(reviews)}
-                    </List>
-                  </div>
+                    {reviewSource.map((val, i) => {
+                      return (
+                        <List>
+                          <div key={val.id} value={val.id?val.id:i} label={val.name}>
+     
+                            <ListItem primaryText={reviews[i]?reviews[i].val.title:undefined}
+                                      secondaryText={reviews[i]?reviews[i].val.userName:undefined}
+                          />
+                          </div>
+                        </List>
+                       
+                      )
+                     }
+                   )}
               </Tab>
              
               
@@ -406,14 +397,22 @@ class LocationPage extends Component {
               isGranted('edit_location') &&
               <Tab
                 label={'Coworkers'}
-                value={'list'}>
-                <div>
-                  <List  id='test' style={{height: '100%'}} ref={(field) => { this.list = field; }}>
-                      {this.renderList(users)}
-                   </List>
-                 </div>
-                 
-              
+                >
+                 {userSource.map((val, i) => {
+                   return (
+                     <List>
+                       <div key={val.id} value={val.id?val.id:i} label={val.name}>
+                
+                         <ListItem primaryText={users[i]?users[i].val.displayName:undefined}
+                                   leftAvatar={<Avatar src={users[i]?users[i].val.photoURL:undefined} />}
+
+                       />
+                       </div>
+                     </List>
+                    
+                   )
+                  }
+                )}
               </Tab>
             </Tabs>
         </Scrollbar>
@@ -454,9 +453,8 @@ LocationPage.propTypes = {
   match: PropTypes.object.isRequired,
   admins: PropTypes.array.isRequired,
   users: PropTypes.array,
-  user: PropTypes.array.isRequired,
+  user: PropTypes.array,
   reviews: PropTypes.array.isRequired,
-  location_reviews: PropTypes.array,
   coworkersHere: PropTypes.array,
   locations: PropTypes.array.isRequired,
 
@@ -481,7 +479,7 @@ const mapStateToProps = (state, ownProps) => {
     roles: lists.roles,
     locations: lists.locations,
     users: lists.users,
-    reviews: lists.location_reviews,
+    reviews: lists.reviews,
     user_roles: lists.user_roles,
     user_grants: lists.user_grants,
     admins: lists.admins,

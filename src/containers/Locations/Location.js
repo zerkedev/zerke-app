@@ -113,7 +113,6 @@ class Location extends Component {
       dialogs,
       match,
       submit,
-      locations_online,
       muiTheme,
       isGranted,
       isOnline,

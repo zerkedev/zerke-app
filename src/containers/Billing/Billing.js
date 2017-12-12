@@ -14,8 +14,8 @@ import Avatar from 'material-ui/Avatar';
 import { withFirebase } from 'firekit';
 import isGranted  from '../../utils/auth';
 import { Tabs, Tab } from 'material-ui/Tabs';
-import { Card, CardHeader, CardMedia, CardTitle, CardActions, CardText } from 'material-ui/Card';
-import {FlatButton} from 'material-ui/FlatButton';
+import {Card, CardText} from 'material-ui/Card'
+//import {FlatButton} from 'material-ui/FlatButton';
 import Scrollbar from '../../components/Scrollbar/Scrollbar';
 
 const path='/billing';
@@ -33,7 +33,7 @@ class Billing extends Component {
   }
 
   handleTabActive = (value) => {
-    const { history, uid } = this.props;
+    const { history} = this.props;
 
     history.push(`${path}/`);
 
@@ -82,7 +82,7 @@ class Billing extends Component {
 
 
   render(){
-    const { intl, billing, muiTheme, history, isGranted, } =this.props;
+    const { intl, billing, history, isGranted, } =this.props;
 
     return (
       <Activity
@@ -98,13 +98,17 @@ class Billing extends Component {
             <Tab
              value={'credits'}
               icon={<FontIcon className="material-icons">credit_card</FontIcon>}>
-              {
-               
-               <List  id='test' style={{height: '100%'}} ref={(field) => { this.list = field; }}>
-                 {this.renderList(billing)}
-               </List>
-          
-              }
+              <Card>
+              <CardText>
+                Current Account Info
+              </CardText>
+              </Card> 
+              <Card>
+              <CardText>
+                Stripe API
+              </CardText>
+              </Card>     
+              
 
             </Tab>
             <Tab
@@ -166,6 +170,7 @@ const mapStateToProps = (state, ownProps) => {
     billing: lists.billing,
     auth,
     browser,
+    uid,
    // type,
     isGranted: grant=>isGranted(state, grant)
   };

@@ -84,7 +84,7 @@ const DrawerContent = (props, context) => {
      {
       value:'/locations',
       visible: isAuthorised,
-      primaryText: intl.formatMessage({id: 'Locations'}),
+      primaryText: intl.formatMessage({id: 'locations'}),
       leftIcon: <FontIcon className="material-icons" >map</FontIcon>
     },
   
@@ -94,12 +94,12 @@ const DrawerContent = (props, context) => {
     //   primaryText: intl.formatMessage({id: 'Forums'}),
     //   leftIcon: <FontIcon className="material-icons" >list</FontIcon>
     // },
-    //  {
-    //   value:'/billing',
-    //   visible: isAuthorised,
-    //   primaryText: intl.formatMessage({id: 'Billing History'}),
-    //   leftIcon: <FontIcon className="material-icons" >credit_card</FontIcon>
-    // },
+     {
+      value:'/billing',
+      visible: isAuthorised,
+      primaryText: intl.formatMessage({id: 'billing'}),
+      leftIcon: <FontIcon className="material-icons" >credit_card</FontIcon>
+    },
     {
       visible: isAuthorised,
       primaryText: intl.formatMessage({id: 'chats'}),
