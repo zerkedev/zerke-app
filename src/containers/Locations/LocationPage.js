@@ -130,63 +130,6 @@ class LocationPage extends Component {
  
 
 
-  renderList(users) {
-    const { auth, list, intl, history, browser, setDialogIsOpen, match} =this.props;
-    const uid=match.params.uid
-
-    if(users===undefined){
-      return <div></div>
-
-    }
-
-    return _.map(users, (user, index) => {
-
-      
-
-      return <div key={index}>
-
-        <ListItem
-          key={index}
-          primaryText={user.displayName}
-          secondaryText={user.val.uid}
-          primary={true}
-          id={index}
-        />
-
-        <Divider inset={true}/>
-
-      </div>
-    });
-  }
-
-  
-  renderList(reviews) {
-      const { auth, intl, history, browser, setDialogIsOpen, match} =this.props;
-      const uid=match.params.uid
-
-      if(reviews===undefined){
-        return <div></div>
-      }
-
-      return _.map(reviews, (review, index) => {
-
-        
-
-        return <div key={index}>
-
-          <ListItem
-            key={index}
-            primaryText={review.val.title}
-            secondaryText={review.val.userName}
-            primary={true}
-            id={index}
-          />
-
-
-          <Divider inset={true}/>
-        </div>
-      });
-  }
 
   
 
@@ -217,7 +160,9 @@ class LocationPage extends Component {
       locationId,
       isGranted
     } = this.props;
+    console.log("reviews", reviews)
     const uid=match.params.uid;
+    console.log('uid', uid)
 
     let ref=firebaseApp.database().ref('reviews').limitToFirst(20);
     let reviewSource=[];
@@ -225,10 +170,12 @@ class LocationPage extends Component {
     if(reviews){
       reviewSource=reviews
         .filter(review=>{
+        console.log("review location uid", review.val.location)
         return review.val.location===uid
       })
         .map(review=>{
-        return {id: review.key, name: review.val.displayName}
+        console.log('filtered review locaiton uid', review)
+        return {id: review.key, name: review.val.userName, title: review.val.title, location: review.val.location}
       })
     };    
 
@@ -240,7 +187,7 @@ class LocationPage extends Component {
           return user.val.location===uid
         })
           .map(user=>{
-          return {id: user.key, name: user.val.displayName}
+          return {id: user.key, name: user.val.displayName, location: user.val.location}
         })
       };   
 
@@ -377,12 +324,15 @@ class LocationPage extends Component {
               <Tab
                 label={'Reviews'}>
                     {reviewSource.map((val, i) => {
+                      console.log("render val", reviewSource, val, i)
                       return (
                         <List>
                           <div key={val.id} value={val.id?val.id:i} label={val.name}>
-     
-                            <ListItem primaryText={reviews[i]?reviews[i].val.title:undefined}
-                                      secondaryText={reviews[i]?reviews[i].val.userName:undefined}
+                            
+                            <ListItem primaryText={val.title}
+                                      secondaryText={val.source}
+                                      uid={match.params.uid}
+                                      {...this.props}
                           />
                           </div>
                         </List>
@@ -402,10 +352,11 @@ class LocationPage extends Component {
                    return (
                      <List>
                        <div key={val.id} value={val.id?val.id:i} label={val.name}>
-                
-                         <ListItem primaryText={users[i]?users[i].val.displayName:undefined}
-                                   leftAvatar={<Avatar src={users[i]?users[i].val.photoURL:undefined} />}
-
+                          
+                         <ListItem primaryText={val.name}
+                                   leftAvatar={<Avatar src={val.photoURL} />}
+                                   uid={match.params.uid}
+                                   {...this.props}
                        />
                        </div>
                      </List>
