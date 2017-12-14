@@ -167,6 +167,10 @@ const messages=defineMessages({
   confirm: 'Confirm',
   amenities_label: 'Location Ammenities',
   amenities_hint: 'Ammenities',
+  description: 'Description',
+  images: 'Images',
+  announcements: 'Announcements',
+  location_instructions: 'Instructions',
 
 
 });

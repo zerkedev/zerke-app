@@ -18,6 +18,7 @@ import IconButton from 'material-ui/IconButton';
 import ReactList from 'react-list';
 import {List, ListItem} from 'material-ui/List';
 import {Paper} from 'material-ui/Paper';
+import {Chip} from 'material-ui/Chip';
 import { Card, CardHeader, CardMedia, CardTitle, CardActions, CardText } from 'material-ui/Card';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import Divider from 'material-ui/Divider';
@@ -70,11 +71,13 @@ class LocationPage extends Component {
     watchList(ref);
 
     let userRef=firebaseApp.database().ref(`/users/`);
-
     watchList(userRef);
 
     let reviewRef=firebaseApp.database().ref(`location_reviews/${uid}/${key}`);
     watchList(reviewRef);
+
+    let locationRef=firebaseApp.database().ref(`locations/${uid}`);
+    watchList(locationRef);
 
     let coworkersHereRef=firebaseApp.database().ref(`locations/${uid}/coworkersHere/`);
     watchList(coworkersHereRef);
@@ -160,9 +163,7 @@ class LocationPage extends Component {
       locationId,
       isGranted
     } = this.props;
-    console.log("reviews", reviews)
     const uid=match.params.uid;
-    console.log('uid', uid)
 
     let ref=firebaseApp.database().ref('reviews').limitToFirst(20);
     let reviewSource=[];
@@ -187,9 +188,29 @@ class LocationPage extends Component {
           return user.val.location===uid
         })
           .map(user=>{
-          return {id: user.key, name: user.val.displayName, location: user.val.location}
+          return {id: user.key, name: user.val.displayName, photoURL: user.val.photoURL, location: user.val.location}
         })
       };   
+    let locationRef=firebaseApp.database().ref('locations');
+    let locationSource=[];
+    if(locations){
+        locationSource=locations
+          .filter(location=>{
+          return location.key===uid
+        })
+          .map(location=>{
+          return { 
+            id: location.key,
+            name: location.val.full_name,
+            photoURL: location.val.photoURL,
+            pos: location.val.pos,
+            description: location.val.description,
+            address: location.val.address,
+            location_amenities: location.val.location_amenities,
+            location_instructions: location.val.location_instructions,
+            announcements: location.val.announcements }
+        })
+      };  
 
 
  
@@ -259,22 +280,25 @@ class LocationPage extends Component {
 
         <Scrollbar>
            <Card>
-                
-           
-               <CardMedia
-                 overlay={<CardTitle 
-                            title='zerke space'
-                            //path={path}
-                            ref="name"
-                            //withRef
-                            subtitle="location_distance"
-                            />}
-               >
-                 <img src={NewChurch} alt="" />
-               </CardMedia>
-              
-           
-             </Card>     
+            {locationSource.map((val, i) => {
+              return (
+                 <CardMedia
+                   overlay={
+                      
+                              <CardTitle 
+                                      title={val.name}
+                                      //path={path}
+                                      ref="name"
+                                      //withRef
+                                      subtitle="location_distance"
+                              />
+                   }
+                 >
+                   <img src={NewChurch} alt="" />
+                 </CardMedia>
+              )
+            })}
+            </Card>     
             <div>
               <br/>
             </div>
@@ -285,9 +309,12 @@ class LocationPage extends Component {
 
               <Tab
                 label={'Details'}>
-                    {
-                       <div style={{marginLeft: 20, display: 'flex', flexWrap: 'wrap', alignItems: 'center'}}>
-                        <div style={{ display: 'center',}}> 
+                  {locationSource.map((val, i) => {
+                    return (
+
+                      <div style={{marginLeft: 20, display: 'flex', flexWrap: 'wrap', alignItems: 'center'}}>
+                       
+                        <div style={{ display: 'center', flexWrap:'flex', marginLeft: 0}}> 
                           <CardActions>
                                <FlatButton label="Cowork Here"
                                primary={true}
@@ -296,27 +323,58 @@ class LocationPage extends Component {
                                onClick={()=>{setDialogIsOpen('cowork_here', true)}} />
                               
                           </CardActions>
-                        </div>
-                        <div style={{margin: 15, display: 'flex'}}>
+                         </div>
 
-                          <FireForm
-                            name={'location'}
-                            path={`${locationPath}`}
-                            isDisabled={true}
-                            onSubmitSuccess={(values)=>{history.push('/locations');}}
-                            onDelete={(values)=>{history.push('/locations');}}
-                            uid={match.params.uid}>
-                            <LocationForm
-                              handleOnlineChange={this.handleOnlineChange}
-                              isOnline={isOnline}
-                              isDisabled={true}
-                              {...this.props} 
-                             />
-                          </FireForm>
-                        </div>
-                    
+                       <div style={{flexGrow: 1, flexShrink: 1, }}>
+                         <Card>
+                          <CardTitle
+                            title={intl.formatMessage({id: 'description'})}
+                          />
+                           <CardText>
+                           {val.address}
+                           <br/>
+                           {val.description}
+                           <CardTitle
+                             title={intl.formatMessage({id: 'location_instructions'})}
+                           />
+                           {val.location_instructions}
+                           </CardText>
+                           <CardTitle
+                              title={intl.formatMessage({id: 'amenities_label'})}>
+                          </CardTitle>
+                            <CardText>
+                            {val.location_amenities}
+                            </CardText>
+                          </Card>
+                       </div>
+                       <div style={{flexGrow: 1, flexShrink: 1, maxWidth: 600}}>
+                         <Card>
+                         <CardTitle
+                           title={intl.formatMessage({id: 'images'})}
+                         />
+                           <CardMedia>
+                           <img src={val.photoURL}/>
+                           </CardMedia>
+                           <CardText>
+                           this is where image carosel will go
+                           </CardText>
+                          </Card>
+                       </div>
+                       <div style={{flexGrow: 1, flexShrink: 1,}}>
+                         <Card>
+                         <CardTitle
+                           title={intl.formatMessage({id: 'announcements'})}
+                         />
+                           <CardText>
+                           this is where announcements carosel will go
+                           </CardText>
+                          </Card>
+                       </div>
                     </div>
-                    }
+                    )
+                   }
+                 )}
+                    
 
               </Tab>
 
@@ -324,13 +382,12 @@ class LocationPage extends Component {
               <Tab
                 label={'Reviews'}>
                     {reviewSource.map((val, i) => {
-                      console.log("render val", reviewSource, val, i)
                       return (
                         <List>
                           <div key={val.id} value={val.id?val.id:i} label={val.name}>
                             
                             <ListItem primaryText={val.title}
-                                      secondaryText={val.source}
+                                      secondaryText={val.name}
                                       uid={match.params.uid}
                                       {...this.props}
                           />

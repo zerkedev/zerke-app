@@ -20,7 +20,7 @@ import Toggle from 'material-ui/Toggle';
 class LocationForm extends Component {
 
   componentWillMount() {
-    this.props.watchList('locations_online');
+    this.props.watchList('locations');
   }
 
   handlePhotoUploadSuccess = (snapshot) =>{
@@ -33,7 +33,7 @@ class LocationForm extends Component {
   handleOnlineChange = (e, isInputChecked) => {
     const { firebaseApp, match } = this.props;
     const uid=match.params.uid;
-
+    console.log('Toggled', uid)
     if(isInputChecked){
       firebaseApp.database().ref(`/locations/${uid}/online`).set(true);
     }else{
@@ -52,10 +52,14 @@ class LocationForm extends Component {
       online,
       dialogs,
       match,
+      watchList,
+      firebaseApp,
     } = this.props;
 
     const uid=match.params.uid
-
+    let locationRef=firebaseApp.database().ref(`locations/${uid}`);
+    watchList(locationRef);
+   
 
     return (
       <form onSubmit={handleSubmit} style={{
@@ -200,7 +204,7 @@ class LocationForm extends Component {
          path={`locations/${uid}/online`}
          label={intl.formatMessage({id: 'is_online_label'})}
          name="online"
-         toggled={online===true}
+         //toggled={locationRef.online}
          ref="online"
          withRef
          onToggle={(e, isInputChecked)=>{this.handleOnlineChange(e, isInputChecked)}}
