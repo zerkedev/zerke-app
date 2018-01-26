@@ -35,6 +35,10 @@ import FlatButton from 'material-ui/FlatButton'
 import TextField from 'material-ui/TextField';
 import LocationForm from '../../components/Forms/LocationForm';
 import NewChurch from '../../utils/resources/yuriy-kovalev-97508.jpg'
+import CheckoutForm from '../../components/Forms/CheckoutForm';
+import {Elements} from 'react-stripe-elements';
+import AddressSection from '../../components/StripeFormFields/AddressSection';
+import CardSection from '../../components/StripeFormFields/CardSection';
 
 
 const path=`/locations/`;
@@ -94,6 +98,7 @@ class LocationPage extends Component {
     const { setDialogIsOpen }=this.props;
 
     setDialogIsOpen('cowork_here', false);
+    setDialogIsOpen('stripe_payment_message', false);
 
   }
 
@@ -108,7 +113,25 @@ class LocationPage extends Component {
 
   //  Timer.schedule(TimerTask .handleDestroyValues, Date .now + 12 * 60 * 60 * 1000);
 
+    if(uid){
+      firebaseApp.database().ref(`/locations/${uid}/coworkersHere/${userId}`).set(true)
+      .then(()=>{
+        this.handleUpdateValues();
+        this.handleClose();
 
+        history.goBack();
+      })
+    }
+
+  }
+  handleStripeConfirm = () => {
+
+    const {history, auth, match, firebaseApp}=this.props;
+    const uid=match.params.uid;
+    const userId=auth.uid;
+
+
+  //  Timer.schedule(TimerTask .handleDestroyValues, Date .now + 12 * 60 * 60 * 1000);
 
     if(uid){
       firebaseApp.database().ref(`/locations/${uid}/coworkersHere/${userId}`).set(true)
@@ -121,7 +144,6 @@ class LocationPage extends Component {
 
   }
 
-
   handleUpdateValues = (values) => {
 
     return {
@@ -129,12 +151,6 @@ class LocationPage extends Component {
       ...values
     }
   }
-
- 
-
-
-
-  
 
 
   render(i, keys) {
@@ -239,6 +255,23 @@ class LocationPage extends Component {
         label={intl.formatMessage({id: 'confirm'})}
         secondary={true}
         onClick={this.handleConfirm}
+      />,
+      <FlatButton
+        label={intl.formatMessage({id: 'pay'})}
+        secondary={true}
+        onClick={() => setDialogIsOpen('stripe_payment_message', true)}
+      />,
+    ];
+    const stripe_actions = [
+      <FlatButton
+        label={intl.formatMessage({id: 'cancel'})}
+        primary={true}
+        onClick={this.handleClose}
+      />,
+      <FlatButton
+        label={intl.formatMessage({id: 'confirm'})}
+        secondary={true}
+        onClick={this.handleStripeConfirm}
       />,
     ];
 
@@ -443,6 +476,19 @@ class LocationPage extends Component {
           onRequestClose={this.handleClose}>
           {intl.formatMessage({id: 'cowork_here_message'})}
         </Dialog>
+        <Elements>
+        <Dialog
+          title={intl.formatMessage({id: 'stripe_payment_message'})}
+          actions={stripe_actions}
+          modal={false}
+          open={dialogs.stripe_payment_message===true}
+          onRequestClose={this.handleClose}>
+          {intl.formatMessage({id: 'cowork_here_message'})}
+      
+       
+        </Dialog>
+        </Elements>
+
 
 
       </Activity>

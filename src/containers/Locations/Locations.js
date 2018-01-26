@@ -82,10 +82,11 @@ class Locations extends Component {
 
 
 
-  render (i, keys){
+  render (i, keys) {
     const { intl, locations, firebaseApp, history, isGranted, } =this.props;
     let ref=firebaseApp.database().ref('locations').limitToFirst(20);
-    let locationSource=[];
+    
+   let locationSource=[];
 
     if(locations){
       locationSource=locations
@@ -97,9 +98,10 @@ class Locations extends Component {
       })
     };    
 
-
+    let markersRef=firebaseApp.database().ref('locations').limitToFirst(20);
     let markers =[];
-    console.log('locations', locations)
+    if(markers){
+   // console.log('locations', locations)
     markers=locations
       .filter(location=>{
       return location.val.online
@@ -107,7 +109,7 @@ class Locations extends Component {
       .map(location=>{
       return {id: location.key, name: location.val.full_name, pos: location.val.pos, key:location.id}
     })
-
+    }
   
     console.log(ref);
                   
@@ -203,9 +205,7 @@ class Locations extends Component {
           </div>
     </Activity>
   );
-
-}
-
+ }
 }
 
 Locations.propTypes = {

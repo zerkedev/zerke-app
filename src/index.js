@@ -7,6 +7,9 @@ import { Root } from './containers/Root';
 import { addLocalizationData } from './locales';
 import registerServiceWorker from './registerServiceWorker';
 import {firebaseApp} from './firebase';
+import {StripeProvider} from 'react-stripe-elements';
+
+import MyStoreCheckout from './containers/Checkout/MyStoreCheckout';
 
 const store = configureStore();
 
@@ -17,6 +20,7 @@ ReactDOM.render(
     <FirebaseProvider firebaseApp={firebaseApp}>
       <Root />
     </FirebaseProvider>
+    
   </Provider>
   , document.getElementById('root')
 );

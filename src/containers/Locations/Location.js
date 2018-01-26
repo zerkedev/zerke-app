@@ -18,6 +18,7 @@ import { withFirebase } from 'firekit';
 import { change, submit } from 'redux-form';
 import isGranted  from '../../utils/auth';
 import isOnline  from '../../utils/online';
+import { Tabs, Tab } from 'material-ui/Tabs';
 
 
 const path='/locations/';
@@ -166,23 +167,28 @@ class Location extends Component {
 
         onBackClick={()=>{history.goBack()}}
         title={intl.formatMessage({id: match.params.uid?'edit_location':'create_location'})}>
+        <Tabs>
+          <Tab label='Front'>
+            <div style={{margin: 15, display: 'flex'}}>
 
-        <div style={{margin: 15, display: 'flex'}}>
-
-          <FireForm
-            name={'location'}
-            path={`${path}`}
-            validate={this.validate}
-            onSubmitSuccess={(values)=>{history.push('/locations');}}
-            onDelete={(values)=>{history.push('/locations');}}
-            uid={match.params.uid}>
-            <LocationForm
-              handleOnlineChange={this.handleOnlineChange}
-              isOnline={isOnline}
-              {...this.props} 
-             />
-          </FireForm>
-        </div>
+              <FireForm
+                name={'location'}
+                path={`${path}`}
+                validate={this.validate}
+                onSubmitSuccess={(values)=>{history.push('/locations');}}
+                onDelete={(values)=>{history.push('/locations');}}
+                uid={match.params.uid}>
+                <LocationForm
+                  handleOnlineChange={this.handleOnlineChange}
+                  isOnline={isOnline}
+                  {...this.props} 
+                 />
+              </FireForm>
+            </div>
+           </Tab>
+           <Tab label='Back'>
+           </Tab>
+          </Tabs>
         <Dialog
           title={intl.formatMessage({id: 'delete_location_title'})}
           actions={actions}

@@ -60,6 +60,7 @@ class ZerkeMap extends Component {
 ZerkeMap.propTypes = {
   locations: PropTypes.array,
   history: PropTypes.object,
+  markers: PropTypes.list,
   isOnline: PropTypes.func.isRequired,
   match: PropTypes.object.isRequired,
   muiTheme: PropTypes.object.isRequired,

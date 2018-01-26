@@ -17,11 +17,26 @@ const config= {
     firebase.auth.EmailAuthProvider,
     firebase.auth.PhoneAuthProvider
   ],
+
   initial_state: {
     theme: 'light',
     locale: 'en'
   },
-  drawer_width: 256
+  drawer_width: 256,
+
+  
 }
 
 export default config;
+
+var stripeTesting = true
+var stripePublishableKey 
+if (stripeTesting){
+  stripePublishableKey = 'pk_test_6cbGwjJQcN3ZBnlIvlIlPIKM'
+} else {
+  stripePublishableKey = 'pk_live_QKQ7q016JwLHjHzJ0WPw5Khn'
+} //
+
+export const STRIPE_PUBLISHABLE_KEY = stripePublishableKey;
+//export const STRIPE_SECRET_KEY = stripeSecretKey;
+export const API_URL ='https://api.yoursite.com'
