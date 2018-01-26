@@ -55,18 +55,6 @@ class Location extends Component {
   }
 
 
-  // handleOnlineToggleChange = (e, isInputChecked, key) => {
-  //   const { firebaseApp, match } = this.props;
-  //   const uid=match.params.uid;
-
-  //   if(isInputChecked){
-  //     firebaseApp.database().ref(`/locations_online/${uid}/${key}`).set(true);
-  //   }else{
-  //     firebaseApp.database().ref(`/locations_online/${uid}/${key}`).remove();
-  //   }
-
-  // }
-
 
 
   handleOnlineChange = (e, isInputChecked) => {
