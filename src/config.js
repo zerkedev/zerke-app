@@ -40,3 +40,5 @@ if (stripeTesting){
 export const STRIPE_PUBLISHABLE_KEY = stripePublishableKey;
 //export const STRIPE_SECRET_KEY = stripeSecretKey;
 export const API_URL ='https://api.yoursite.com'
+
+export const PUBLIC_URL = 'https://zerke-80063.firebaseapp.com/'
