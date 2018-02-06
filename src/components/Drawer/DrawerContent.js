@@ -76,35 +76,25 @@ const DrawerContent = (props, context) => {
 
   const menuItems=[
     {
-      value:'/dashboard',
+      value:'/home',
       visible: isAuthorised,
-      primaryText: intl.formatMessage({id: 'dashboard'}),
+      primaryText: intl.formatMessage({id: 'home'}),
       leftIcon: <FontIcon className="material-icons" >dashboard</FontIcon>
     },
      {
       value:'/locations',
       visible: isAuthorised,
-      primaryText: intl.formatMessage({id: 'Locations'}),
+      primaryText: intl.formatMessage({id: 'locations'}),
       leftIcon: <FontIcon className="material-icons" >map</FontIcon>
     },
-    {
-      value:'/companies',
-      visible: isGranted('read_companies'),
-      primaryText: intl.formatMessage({id: 'companies'}),
-      leftIcon: <FontIcon className="material-icons" >business</FontIcon>
-    },
-    {
-      value:'/forums',
-      visible: isAuthorised,
-      primaryText: intl.formatMessage({id: 'Forums'}),
-      leftIcon: <FontIcon className="material-icons" >list</FontIcon>
-    },
-     {
-      value:'/billing history',
-      visible: isAuthorised,
-      primaryText: intl.formatMessage({id: 'Billing History'}),
-      leftIcon: <FontIcon className="material-icons" >credit_card</FontIcon>
-    },
+  
+    //{
+    //   value:'/posts',
+    //   visible: isAuthorised,
+    //   primaryText: intl.formatMessage({id: 'Forums'}),
+    //   leftIcon: <FontIcon className="material-icons" >list</FontIcon>
+    // },
+     
     {
       visible: isAuthorised,
       primaryText: intl.formatMessage({id: 'chats'}),
@@ -156,6 +146,24 @@ const DrawerContent = (props, context) => {
           visible: isAuthorised, //In prod: isGranted('read_users'),
           primaryText: intl.formatMessage({id: 'users'}),
           leftIcon: <FontIcon className="material-icons" >group</FontIcon>
+        },
+        {
+          value:'/dashboard',
+          visible: isAuthorised,
+          primaryText: intl.formatMessage({id: 'dashboard'}),
+          leftIcon: <FontIcon className="material-icons" >dashboard</FontIcon>
+        },
+        {
+          value:'/tasks',
+          visible: isAuthorised, //In prod: isGranted('read_tasks'),
+          primaryText: intl.formatMessage({id: 'tasks'}),
+          leftIcon: <FontIcon className="material-icons" >done</FontIcon>
+        },
+        {
+          value:'/companies',
+          visible: isGranted('read_companies'),
+          primaryText: intl.formatMessage({id: 'companies'}),
+          leftIcon: <FontIcon className="material-icons" >business</FontIcon>
         },
         {
           value:'/roles',
@@ -213,6 +221,12 @@ const DrawerContent = (props, context) => {
       value:'/my_account',
       primaryText: intl.formatMessage({id: 'my_account'}),
       leftIcon: <FontIcon className="material-icons" >account_box</FontIcon>
+    },
+     {
+      value:'/billing',
+      visible: isAuthorised,
+      primaryText: intl.formatMessage({id: 'billing'}),
+      leftIcon: <FontIcon className="material-icons" >credit_card</FontIcon>
     },
     {
       value:'/signin',
